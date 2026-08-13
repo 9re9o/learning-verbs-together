@@ -1,0 +1,885 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #0d1117;
+    color: #f1f5f9;
+
+    min-height: 100vh;
+}
+
+.app {
+    width: 100%;
+    max-width: 500px;
+
+    margin: auto;
+    padding: 24px 18px 40px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    margin-bottom: 24px;
+}
+
+.small-title {
+    font-size: 11px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    color: #7c8da6;
+
+    margin-bottom: 6px;
+}
+
+h1 {
+    margin: 0;
+
+    font-size: 30px;
+
+    color: #ffffff;
+}
+
+.subtitle {
+    margin-top: 8px;
+
+    color: #8b9bb0;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   GRUPOS
+========================= */
+
+.groups {
+    display: flex;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+}
+
+.group-btn {
+    flex: 1;
+
+    padding: 10px 5px;
+
+    border: 1px solid #273244;
+
+    border-radius: 10px;
+
+    background: #151b24;
+    color: #9ca9ba;
+
+    cursor: pointer;
+}
+
+.group-btn.active {
+    background: #e8eef8;
+
+    color: #0d1117;
+
+    border-color: #e8eef8;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: #151b24;
+
+    border: 1px solid #222c3b;
+
+    border-radius: 20px;
+
+    padding: 22px 20px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.30);
+}
+
+
+/* =========================
+   PARTE SUPERIOR
+========================= */
+
+.top-card {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* TIPO DE TIEMPO */
+
+.mode {
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    background: #263d65;
+
+    color: #8bb9ff;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* contador */
+
+#counter {
+    font-size: 12px;
+
+    color: #7c8da6;
+}
+
+
+/* =========================
+   PREGUNTA
+========================= */
+
+.question-text {
+    margin-top: 32px;
+    margin-bottom: 5px;
+
+    color: #8190a5;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   VERBO
+========================= */
+
+.verb-container {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 8px;
+}
+
+h2 {
+    margin: 0;
+
+    font-size: 50px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    letter-spacing: 1px;
+}
+
+
+/* botón sonido */
+
+.speak-button {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 0;
+
+    border: 1px solid #31405a;
+
+    border-radius: 50%;
+
+    background: #1b2534;
+
+    color: #a9c8ff;
+
+    font-size: 19px;
+
+    cursor: pointer;
+}
+
+.speak-button:active {
+    transform: scale(0.94);
+}
+
+
+/* =========================
+   FONÉTICA
+========================= */
+
+.phonetic {
+    text-align: center;
+
+    color: #718096;
+
+    font-size: 14px;
+
+    margin-top: 8px;
+    margin-bottom: 28px;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+input {
+    width: 100%;
+
+    padding: 15px;
+
+    font-size: 18px;
+
+    background: #0f141c;
+
+    color: white;
+
+    border: 2px solid #273244;
+
+    border-radius: 12px;
+
+    outline: none;
+}
+
+input::placeholder {
+    color: #536176;
+}
+
+input:focus {
+    border-color: #6da5ff;
+}
+
+
+/* =========================
+   BOTÓN PRINCIPAL
+========================= */
+
+.main-button {
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 15px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #e8eef8;
+
+    color: #10141b;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   SIGUIENTE
+========================= */
+
+.secondary-button {
+    width: 100%;
+
+    margin-top: 10px;
+
+    padding: 13px;
+
+    border: 1px solid #273244;
+
+    border-radius: 12px;
+
+    background: #1a2230;
+
+    color: #d7dfeb;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   RESULTADO
+========================= */
+
+.result {
+    min-height: 60px;
+
+    margin-top: 15px;
+
+    text-align: center;
+
+    line-height: 1.5;
+
+    border-radius: 12px;
+}
+
+.correct {
+    color: #6ee7a8;
+}
+
+.incorrect {
+    color: #ff8b8b;
+}
+
+
+/* respuesta correcta */
+
+.correct-answer {
+    margin-top: 8px;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    color: white;
+}
+
+
+/* botón audio respuesta */
+
+.answer-audio {
+    margin-top: 10px;
+
+    padding: 8px 14px;
+
+    border-radius: 9px;
+
+    border: 1px solid #31405a;
+
+    background: #1b2534;
+
+    color: #a9c8ff;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   SELECTOR DE MODO
+========================= */
+
+.mode-selector {
+    margin-top: 20px;
+}
+
+.mode-selector > p {
+    font-size: 12px;
+
+    color: #718096;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.mode-buttons {
+    display: flex;
+
+    gap: 10px;
+}
+
+.mode-btn {
+    flex: 1;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    border: 1px solid #273244;
+
+    background: #151b24;
+
+    color: #8593a6;
+
+    cursor: pointer;
+}
+
+.mode-btn.active {
+    background: #253149;
+
+    border-color: #4d6d9e;
+
+    color: #c7dcff;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   MÓVIL
+========================= */
+
+@media (max-width: 400px) {
+
+    .app {
+        padding: 18px 14px 30px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    h2 {
+        font-size: 44px;
+    }
+
+    .card {
+        padding: 20px 16px;
+    }
+
+    .mode {
+        font-size: 10px;
+    }
+
+}
+
+.answer-phonetic {
+    margin-top: 4px;
+
+    font-size: 15px;
+
+    color: #7f91a8;
+
+    font-weight: normal;
+}
+/* =========================
+   BOTÓN LISTA
+========================= */
+
+.list-button {
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding: 14px;
+
+    border: 1px solid #273244;
+    border-radius: 12px;
+
+    background: #151b24;
+    color: #d7dfeb;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   LISTA COMPLETA
+========================= */
+
+.verb-list-section {
+    margin-top: 16px;
+
+    background: #151b24;
+
+    border: 1px solid #222c3b;
+    border-radius: 18px;
+
+    padding: 18px;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+.list-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.list-header h3 {
+    margin: 0;
+
+    font-size: 22px;
+}
+
+
+.close-button {
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid #273244;
+    border-radius: 50%;
+
+    background: #1b2534;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   TABLA
+========================= */
+
+.table-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border-radius: 12px;
+}
+
+
+table {
+    width: 100%;
+
+    min-width: 600px;
+
+    border-collapse: collapse;
+
+    background: #10161f;
+}
+
+
+th {
+    padding: 13px 12px;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    color: #8bb9ff;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+
+    background: #1b2534;
+
+    border-bottom: 1px solid #2c394c;
+}
+
+
+td {
+    padding: 13px 12px;
+
+    font-size: 14px;
+
+    border-bottom: 1px solid #202a39;
+
+    color: #d9e1ec;
+}
+
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+tbody tr:hover {
+    background: #182231;
+}
+
+
+/* primera columna */
+
+td:first-child {
+    font-weight: bold;
+
+    color: white;
+}
+
+
+/* móvil */
+
+@media (max-width: 500px) {
+
+    .verb-list-section {
+        padding: 14px;
+    }
+
+    table {
+        min-width: 580px;
+    }
+
+}
+
+/* =========================
+   FILA SELECCIONABLE
+========================= */
+
+#verbTableBody tr {
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#verbTableBody tr:active {
+    background: #233047;
+}
+
+
+/* =========================
+   MODAL VERBO
+========================= */
+
+.verb-modal {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 999;
+}
+
+
+/* MUY IMPORTANTE */
+
+.verb-modal.hidden {
+    display: none;
+}
+
+
+.verb-modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 420px;
+
+    background: #151b24;
+
+    border: 1px solid #2c394c;
+    border-radius: 22px;
+
+    padding: 28px 20px 22px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.55);
+}
+
+
+/* =========================
+   BOTÓN CERRAR
+========================= */
+
+.modal-close {
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid #31405a;
+    border-radius: 50%;
+
+    background: #1b2534;
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   TÍTULO
+========================= */
+
+.modal-small-title {
+    margin: 0 0 7px;
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    color: #7992b4;
+}
+
+
+#modalVerbTitle {
+    margin: 0;
+
+    font-size: 34px;
+
+    text-transform: uppercase;
+
+    color: white;
+}
+
+
+.modal-translation {
+    margin-top: 5px;
+    margin-bottom: 25px;
+
+    color: #8fa0b8;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   FORMAS DEL VERBO
+========================= */
+
+.modal-form {
+    margin-top: 12px;
+
+    border: 1px solid #273244;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    background: #10161f;
+}
+
+
+.modal-form-header {
+    padding: 8px 13px;
+
+    background: #1b283a;
+
+    color: #85b2ff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+
+.modal-form-content {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px;
+}
+
+
+.modal-form-content strong {
+    display: block;
+
+    font-size: 22px;
+
+    color: white;
+}
+
+
+.modal-form-content span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+
+    color: #7f91a8;
+}
+
+
+/* =========================
+   AUDIO
+========================= */
+
+.modal-speak {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border: 1px solid #31405a;
+
+    border-radius: 50%;
+
+    background: #1b2534;
+
+    color: #a9c8ff;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+
+.modal-speak:active {
+    transform: scale(0.94);
+}
+
+
+/* =========================
+   MÓVIL
+========================= */
+
+@media (max-width: 500px) {
+
+    .verb-modal {
+        padding: 15px;
+    }
+
+
+    .verb-modal-content {
+        max-width: 100%;
+
+        padding: 26px 17px 20px;
+    }
+
+
+    #modalVerbTitle {
+        font-size: 30px;
+    }
+
+
+    .modal-form-content strong {
+        font-size: 20px;
+    }
+
+}

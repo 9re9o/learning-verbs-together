@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Irregular Verbs Practice</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="app">
+
+        <header>
+            <p class="small-title">ENGLISH PRACTICE</p>
+            <h1>Irregular Verbs</h1>
+            <p class="subtitle">Practica escribiendo, no memorizando una tabla.</p>
+        </header>
+
+
+        <!-- GRUPO DE ESTUDIO -->
+        <section class="groups">
+
+            <button class="group-btn" data-group="review">
+                Repaso
+            </button>
+
+            <button class="group-btn active" data-group="current">
+                Ahora
+            </button>
+
+            <button class="group-btn" data-group="future">
+                Después
+            </button>
+
+            <button class="group-btn" data-group="all">
+                Todos
+            </button>
+
+        </section>
+
+
+        <!-- TARJETA -->
+        <section class="card">
+
+            <div class="top-card">
+
+                <span id="modeLabel" class="mode">
+                    PAST SIMPLE
+                </span>
+
+                <span id="counter">
+                    0 correctas
+                </span>
+
+            </div>
+
+
+            <p id="questionText" class="question-text">
+                Escribe el Past Simple de:
+            </p>
+
+
+            <div class="verb-container">
+
+                <h2 id="verbWord">
+                    drink
+                </h2>
+
+                <button id="speakQuestion" class="speak-button" aria-label="Escuchar pronunciación">
+                    🔊
+                </button>
+
+            </div>
+
+            <p id="phonetic" class="phonetic">
+                /drɪŋk/
+            </p>
+
+
+
+
+            <input type="text" id="answer" placeholder="Escribe tu respuesta..." autocomplete="off"
+                autocapitalize="none" spellcheck="false">
+
+
+            <button id="checkButton" class="main-button">
+                Comprobar
+            </button>
+
+
+            <div id="result" class="result"></div>
+
+
+            <button id="nextButton" class="secondary-button">
+                Siguiente verbo →
+            </button>
+
+        </section>
+
+        <button id="showVerbList" class="list-button">
+            📚 Ver lista completa
+        </button>
+
+
+        <section id="verbListSection" class="verb-list-section hidden">
+
+            <div class="list-header">
+
+                <div>
+                    <p class="small-title">
+                        IRREGULAR VERBS
+                    </p>
+
+                    <h3>
+                        Lista completa
+                    </h3>
+                </div>
+
+
+                <button id="closeVerbList" class="close-button">
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Infinitive</th>
+                            <th>Past Simple</th>
+                            <th>Past Participle</th>
+                            <th>Español</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="verbTableBody">
+
+                        <!-- JavaScript agrega los verbos -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+            <!-- =========================
+     MODAL DETALLE DEL VERBO
+========================= -->
+
+            <div id="verbModal" class="verb-modal hidden">
+
+                <div class="verb-modal-content">
+
+                    <button id="closeVerbModal" class="modal-close" aria-label="Cerrar">
+                        ✕
+                    </button>
+
+
+                    <p class="modal-small-title">
+                        IRREGULAR VERB
+                    </p>
+
+
+                    <h3 id="modalVerbTitle">
+                        drive
+                    </h3>
+
+
+                    <p id="modalTranslation" class="modal-translation">
+                        conducir
+                    </p>
+
+
+                    <!-- INFINITIVE -->
+
+                    <div class="modal-form">
+
+                        <div class="modal-form-header">
+                            INFINITIVE
+                        </div>
+
+                        <div class="modal-form-content">
+
+                            <div>
+
+                                <strong id="modalInfinitive">
+                                    drive
+                                </strong>
+
+                                <span id="modalIpaInfinitive">
+                                    /draɪv/
+                                </span>
+
+                            </div>
+
+
+                            <button id="speakInfinitive" class="modal-speak">
+                                🔊
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAST SIMPLE -->
+
+                    <div class="modal-form">
+
+                        <div class="modal-form-header">
+                            PAST SIMPLE
+                        </div>
+
+                        <div class="modal-form-content">
+
+                            <div>
+
+                                <strong id="modalPast">
+                                    drove
+                                </strong>
+
+                                <span id="modalIpaPast">
+                                    /droʊv/
+                                </span>
+
+                            </div>
+
+
+                            <button id="speakPast" class="modal-speak">
+                                🔊
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAST PARTICIPLE -->
+
+                    <div class="modal-form">
+
+                        <div class="modal-form-header">
+                            PAST PARTICIPLE
+                        </div>
+
+                        <div class="modal-form-content">
+
+                            <div>
+
+                                <strong id="modalParticiple">
+                                    driven
+                                </strong>
+
+                                <span id="modalIpaParticiple">
+                                    /ˈdrɪvən/
+                                </span>
+
+                            </div>
+
+
+                            <button id="speakParticiple" class="modal-speak">
+                                🔊
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        <!-- MODO -->
+        <section class="mode-selector">
+
+            <p>Tipo de práctica</p>
+
+            <div class="mode-buttons">
+
+                <button id="completeMode" class="mode-btn active">
+                    Completar
+                </button>
+
+                <button id="identifyMode" class="mode-btn">
+                    Identificar
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="verbs.js"></script>
+    <script src="app.js"></script>
+
+</body>
+
+</html>
