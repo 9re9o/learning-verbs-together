@@ -394,65 +394,8 @@ Cada verbo debe contener:
 }
 ```
 
-Es importante mantener todas las propiedades para evitar registros incompletos.
-
 ---
 
-## 📱 Uso en móvil
-
-La interfaz está diseñada principalmente para utilizarse desde teléfonos móviles.
-
-No requiere:
-
-- Android Studio.
-- APK.
-- Java.
-- Kotlin.
-- Node.js.
-- npm.
-- Backend.
-- Base de datos.
-
-Solo se necesita un navegador web moderno.
-
----
-
-## 🌐 GitHub Pages
-
-El proyecto puede publicarse gratuitamente utilizando **GitHub Pages**.
-
-Una vez publicado, puede accederse desde una dirección similar a:
-
-```text
-https://usuario.github.io/irregular-verbs/
-```
-
-Esto permite utilizar la aplicación desde:
-
-- Android.
-- iPhone.
-- Tablet.
-- Computadora.
-
-Sin necesidad de mantener una computadora funcionando como servidor.
-
----
-
-## 🔄 Actualizaciones
-
-Después de modificar los verbos o alguna funcionalidad:
-
-```bash
-git add .
-git commit -m "Actualizar verbos"
-git push
-```
-
-GitHub Pages publicará los nuevos cambios del proyecto.
-
-Esto permite actualizar fácilmente la lista de estudio desde el repositorio.
-
----
 
 ## 🛠️ Tecnologías utilizadas
 
