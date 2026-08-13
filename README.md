@@ -1,3 +1,4 @@
+**Este código fue creado principalmente a vibe coding**
 # 📘 Irregular Verbs Practice
 
 Aplicación web sencilla para practicar **verbos irregulares en inglés** de forma interactiva.
