@@ -883,3 +883,43 @@ td:first-child {
     }
 
 }
+
+.form-options {
+    display: flex;
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+.form-option {
+    flex: 1;
+
+    padding: 12px 8px;
+
+    border: 1px solid #31405a;
+    border-radius: 10px;
+
+    background: #1a2230;
+    color: #d7dfeb;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.form-option:active {
+    transform: scale(0.97);
+}
+
+.form-option.correct-option {
+    background: #164e3a;
+    border-color: #2d8a68;
+    color: #7bf1b8;
+}
+
+.form-option.wrong-option {
+    background: #4a1f24;
+    border-color: #8c3a44;
+    color: #ff9fa8;
+}

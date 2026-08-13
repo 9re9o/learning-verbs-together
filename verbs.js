@@ -239,7 +239,17 @@ const verbs = [
         "ipaParticiple": "/ˈfɔlən/"
     },
 
-
+    {
+        "group": "current",
+        "infinitive": "feed",
+        "past": "fed",
+        "participle": "fed",
+        "translation": "alimentar / dar de comer",
+        "ipaInfinitive": "/fiːd/",
+        "ipaPast": "/fɛd/",
+        "ipaParticiple": "/fɛd/"
+    },
+    
     {
         "group": "current",
         "infinitive": "feel",
