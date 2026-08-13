@@ -312,85 +312,86 @@ function openVerbModal(verb) {
 // NUEVA PREGUNTA
 // =============================
 
-function newQuestion() {
+// function newQuestion() {
 
-    result.innerHTML = "";
-    answer.value = "";
+//     result.innerHTML = "";
+//     result.className = "result";
+//     answer.value = "";
 
-    const list = getCurrentList();
-    console.log(
-        "Grupo actual:",
-        selectedGroup
-    );
-    console.log(
-        "Verbos disponibles:",
-        list
-    );
+//     const list = getCurrentList();
+//     console.log(
+//         "Grupo actual:",
+//         selectedGroup
+//     );
+//     console.log(
+//         "Verbos disponibles:",
+//         list
+//     );
 
-    currentVerb =
-        list[Math.floor(Math.random() * list.length)];
-
-
-    if (practiceMode === "complete") {
-
-        const options = ["past", "participle"];
-
-        requestedForm =
-            options[Math.floor(Math.random() * options.length)];
+//     currentVerb =
+//         list[Math.floor(Math.random() * list.length)];
 
 
-        verbWord.textContent =
-            currentVerb.infinitive;
+//     if (practiceMode === "complete") {
+
+//         const options = ["past", "participle"];
+
+//         requestedForm =
+//             options[Math.floor(Math.random() * options.length)];
 
 
-        phonetic.textContent =
-            currentVerb.ipaInfinitive || "";
+//         verbWord.textContent =
+//             currentVerb.infinitive;
 
 
-        if (requestedForm === "past") {
-
-            questionText.textContent =
-                "Escribe el Past Simple de:";
-
-            modeLabel.textContent =
-                "PAST SIMPLE";
-
-        } else {
-
-            questionText.textContent =
-                "Escribe el Past Participle de:";
-
-            modeLabel.textContent =
-                "PAST PARTICIPLE";
-        }
-
-    }
-
-    else {
-
-        const forms = [
-            "infinitive",
-            "past",
-            "participle"
-        ];
-
-        requestedForm =
-            forms[Math.floor(Math.random() * forms.length)];
+//         phonetic.textContent =
+//             currentVerb.ipaInfinitive || "";
 
 
-        verbWord.textContent =
-            currentVerb[requestedForm];
+//         if (requestedForm === "past") {
+
+//             questionText.textContent =
+//                 "Escribe el Past Simple de:";
+
+//             modeLabel.textContent =
+//                 "PAST SIMPLE";
+
+//         } else {
+
+//             questionText.textContent =
+//                 "Escribe el Past Participle de:";
+
+//             modeLabel.textContent =
+//                 "PAST PARTICIPLE";
+//         }
+
+//     }
+
+//     else {
+
+//         const forms = [
+//             "infinitive",
+//             "past",
+//             "participle"
+//         ];
+
+//         requestedForm =
+//             forms[Math.floor(Math.random() * forms.length)];
 
 
-        phonetic.textContent = "";
+//         verbWord.textContent =
+//             currentVerb[requestedForm];
 
-        questionText.textContent =
-            "¿Qué forma verbal es?";
 
-        modeLabel.textContent =
-            "IDENTIFICAR";
-    }
-}
+//         phonetic.textContent = "";
+
+//         questionText.textContent =
+//             "¿Qué forma verbal es?";
+
+//         modeLabel.textContent =
+//             "IDENTIFICAR";
+//     }
+// }
 
 
 // =============================
@@ -672,22 +673,38 @@ function getAnswerIPA() {
 
 function newQuestion() {
 
+    // =============================
+    // LIMPIAR ESTADO ANTERIOR
+    // =============================
+
     result.innerHTML = "";
+    result.className = "result";
+
     answer.value = "";
 
-    const list =
-        getCurrentList();
+    const list = getCurrentList();
+
+    if (!list || list.length === 0) {
+        result.className = "result incorrect";
+        result.innerHTML = "No hay verbos disponibles en este grupo.";
+        return;
+    }
+
+
+    // =============================
+    // SELECCIONAR VERBO ALEATORIO
+    // =============================
 
     currentVerb =
         list[
-        Math.floor(
-            Math.random() * list.length
-        )
+            Math.floor(
+                Math.random() * list.length
+            )
         ];
 
 
     // =============================
-    // COMPLETAR
+    // MODO COMPLETAR
     // =============================
 
     if (practiceMode === "complete") {
@@ -701,18 +718,23 @@ function newQuestion() {
             "participle"
         ];
 
+
         requestedForm =
             options[
-            Math.floor(
-                Math.random() * options.length
-            )
+                Math.floor(
+                    Math.random() * options.length
+                )
             ];
 
+
+        // Siempre mostramos el infinitivo
         verbWord.textContent =
             currentVerb.infinitive;
 
+
         phonetic.textContent =
             currentVerb.ipaInfinitive || "";
+
 
         if (requestedForm === "past") {
 
@@ -722,7 +744,9 @@ function newQuestion() {
             modeLabel.textContent =
                 "PAST SIMPLE";
 
-        } else {
+        }
+
+        else {
 
             questionText.textContent =
                 "Escribe el Past Participle de:";
@@ -731,12 +755,15 @@ function newQuestion() {
                 "PAST PARTICIPLE";
         }
 
+
+        answer.focus();
+
         return;
     }
 
 
     // =============================
-    // IDENTIFICAR ESCRIBIENDO
+    // MODO IDENTIFICAR ESCRIBIENDO
     // =============================
 
     if (practiceMode === "identify") {
@@ -745,44 +772,59 @@ function newQuestion() {
         checkButton.classList.remove("hidden");
         formOptions.classList.add("hidden");
 
+
         const forms = [
             "infinitive",
             "past",
             "participle"
         ];
 
+
         requestedForm =
             forms[
-            Math.floor(
-                Math.random() * forms.length
-            )
+                Math.floor(
+                    Math.random() * forms.length
+                )
             ];
 
+
+        // Mostrar la forma seleccionada
         verbWord.textContent =
             currentVerb[requestedForm];
 
+
+        // Mostrar IPA correspondiente
         phonetic.textContent =
             getCurrentIPA();
+
 
         questionText.textContent =
             "¿Qué forma verbal es?";
 
+
         modeLabel.textContent =
             "IDENTIFICAR";
+
+
+        answer.focus();
 
         return;
     }
 
 
     // =============================
-    // SELECCIONAR FORMA
+    // MODO SELECCIONAR FORMA
     // =============================
 
     if (practiceMode === "select") {
 
+        // No necesitamos escribir
         answer.classList.add("hidden");
         checkButton.classList.add("hidden");
+
+        // Mostrar las tres opciones
         formOptions.classList.remove("hidden");
+
 
         const forms = [
             "infinitive",
@@ -790,24 +832,38 @@ function newQuestion() {
             "participle"
         ];
 
+
         requestedForm =
             forms[
-            Math.floor(
-                Math.random() * forms.length
-            )
+                Math.floor(
+                    Math.random() * forms.length
+                )
             ];
 
+
+        // Mostrar la palabra correspondiente
         verbWord.textContent =
             currentVerb[requestedForm];
 
+
+        // IMPORTANTE:
+        // esto permite distinguir casos como:
+        // read /riːd/ vs read /rɛd/
         phonetic.textContent =
             getCurrentIPA();
+
 
         questionText.textContent =
             "Selecciona qué forma verbal es:";
 
+
         modeLabel.textContent =
             "SELECCIONAR FORMA";
+
+
+        // =============================
+        // REINICIAR BOTONES
+        // =============================
 
         document
             .querySelectorAll(".form-option")
@@ -821,6 +877,9 @@ function newQuestion() {
                 button.disabled = false;
 
             });
+
+
+        return;
     }
 }
 
@@ -839,6 +898,98 @@ function getCurrentIPA() {
     }
 
     return "";
+}
+// =============================
+// OBTENER IPA SEGÚN FORMA
+// =============================
+
+function getIPAByForm(verb, form) {
+
+    if (form === "infinitive") {
+        return verb.ipaInfinitive || "";
+    }
+
+    if (form === "past") {
+        return verb.ipaPast || "";
+    }
+
+    if (form === "participle") {
+        return verb.ipaParticiple || "";
+    }
+
+    return "";
+}
+
+
+// =============================
+// NOMBRE VISIBLE DE LA FORMA
+// =============================
+
+function getFormName(form) {
+
+    if (form === "infinitive") {
+        return "Infinitive";
+    }
+
+    if (form === "past") {
+        return "Past Simple";
+    }
+
+    if (form === "participle") {
+        return "Past Participle";
+    }
+
+    return form;
+}
+
+
+// =============================
+// FORMAS VÁLIDAS PARA LA PALABRA
+// MOSTRADA
+// =============================
+
+function getValidForms() {
+
+    const forms = [
+        "infinitive",
+        "past",
+        "participle"
+    ];
+
+
+    const shownWord =
+        currentVerb[requestedForm]
+            .trim()
+            .toLowerCase();
+
+
+    const shownIPA =
+        getIPAByForm(
+            currentVerb,
+            requestedForm
+        );
+
+
+    return forms.filter(form => {
+
+        const sameWord =
+            currentVerb[form]
+                .trim()
+                .toLowerCase()
+            === shownWord;
+
+
+        const sameIPA =
+            getIPAByForm(
+                currentVerb,
+                form
+            )
+            === shownIPA;
+
+
+        return sameWord && sameIPA;
+
+    });
 }
 function activateModeButton(selectedButton) {
 
@@ -1018,6 +1169,10 @@ document
         newQuestion();
     });
 
+// =============================
+// SELECCIONAR FORMA
+// =============================
+
 document
     .querySelectorAll(".form-option")
     .forEach(button => {
@@ -1030,94 +1185,151 @@ document
                     this.dataset.form;
 
 
-                const isCorrect =
-                    selectedForm === requestedForm;
+                // Todas las formas que pueden
+                // representar la palabra mostrada
 
+                const validForms =
+                    getValidForms();
+
+
+                const isCorrect =
+                    validForms.includes(
+                        selectedForm
+                    );
+
+
+                // =============================
+                // DESACTIVAR BOTONES
+                // =============================
+
+                document
+                    .querySelectorAll(".form-option")
+                    .forEach(option => {
+
+                        option.disabled = true;
+
+                    });
+
+
+                // =============================
+                // MARCAR TODAS LAS VÁLIDAS
+                // =============================
+
+                validForms.forEach(form => {
+
+                    const validButton =
+                        document.querySelector(
+                            `.form-option[data-form="${form}"]`
+                        );
+
+
+                    if (validButton) {
+
+                        validButton.classList.add(
+                            "correct-option"
+                        );
+
+                    }
+
+                });
+
+
+                // =============================
+                // RESPUESTA CORRECTA
+                // =============================
 
                 if (isCorrect) {
-
-                    this.classList.add(
-                        "correct-option"
-                    );
 
                     result.className =
                         "result correct";
 
-                    result.innerHTML = `
-                        ✅ Correcto
-                    `;
+
+                    if (validForms.length === 1) {
+
+                        result.innerHTML = `
+                            ✅ Correcto
+                        `;
+
+                    }
+
+                    else {
+
+                        const validNames =
+                            validForms
+                                .map(getFormName)
+                                .join(" · ");
+
+
+                        result.innerHTML = `
+
+                            ✅ Correcto
+
+                            <br>
+
+                            <small>
+                                Esta forma también puede ser:
+                            </small>
+
+                            <br>
+
+                            <strong>
+                                ${validNames}
+                            </strong>
+
+                        `;
+
+                    }
+
 
                     correctAnswers++;
+
 
                     counter.textContent =
                         `${correctAnswers} correctas`;
 
-                } else {
+                }
+
+
+                // =============================
+                // RESPUESTA INCORRECTA
+                // =============================
+
+                else {
 
                     this.classList.add(
                         "wrong-option"
                     );
 
 
-                    const correctButton =
-                        document.querySelector(
-                            `.form-option[data-form="${requestedForm}"]`
-                        );
-
-
-                    correctButton.classList.add(
-                        "correct-option"
-                    );
+                    const validNames =
+                        validForms
+                            .map(getFormName)
+                            .join(" · ");
 
 
                     result.className =
                         "result incorrect";
 
 
-                    let correctName;
-
-
-                    if (
-                        requestedForm === "infinitive"
-                    ) {
-                        correctName =
-                            "Infinitive";
-                    }
-
-                    if (
-                        requestedForm === "past"
-                    ) {
-                        correctName =
-                            "Past Simple";
-                    }
-
-                    if (
-                        requestedForm === "participle"
-                    ) {
-                        correctName =
-                            "Past Participle";
-                    }
-
-
                     result.innerHTML = `
+
                         ❌ Incorrecto
+
                         <br>
+
+                        <small>
+                            Respuesta${validForms.length > 1 ? "s" : ""} válida${validForms.length > 1 ? "s" : ""}:
+                        </small>
+
+                        <br>
+
                         <strong>
-                            ${correctName}
+                            ${validNames}
                         </strong>
+
                     `;
+
                 }
-
-
-                document
-                    .querySelectorAll(
-                        ".form-option"
-                    )
-                    .forEach(option => {
-
-                        option.disabled = true;
-
-                    });
 
             }
         );

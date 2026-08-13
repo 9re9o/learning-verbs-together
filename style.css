@@ -923,3 +923,7 @@ td:first-child {
     border-color: #8c3a44;
     color: #ff9fa8;
 }
+
+.form-options.hidden {
+    display: none;
+}
