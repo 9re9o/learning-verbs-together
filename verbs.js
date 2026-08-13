@@ -167,14 +167,14 @@ const verbs = [
         "ipaParticiple": "/dʌn/"
     },
 
-    {
-        "past": "did",
-        "participle": "done",
-        "translation": "hacer",
-        "ipaInfinitive": "/duː/",
-        "ipaPast": "/dɪd/",
-        "ipaParticiple": "/dʌn/"
-    },
+    // {
+    //     "past": "did",
+    //     "participle": "done",
+    //     "translation": "hacer",
+    //     "ipaInfinitive": "/duː/",
+    //     "ipaPast": "/dɪd/",
+    //     "ipaParticiple": "/dʌn/"
+    // },
 
 
     {
@@ -589,13 +589,13 @@ const verbs = [
     },
 
 
-    {
-        "participle": "said",
-        "translation": "decir",
-        "ipaInfinitive": "/seɪ/",
-        "ipaPast": "/sɛd/",
-        "ipaParticiple": "/sɛd/"
-    },
+    // {
+    //     "participle": "said",
+    //     "translation": "decir",
+    //     "ipaInfinitive": "/seɪ/",
+    //     "ipaPast": "/sɛd/",
+    //     "ipaParticiple": "/sɛd/"
+    // },
 
 
     {
@@ -825,13 +825,13 @@ const verbs = [
         "ipaParticiple": "/θroʊn/"
     },
 
-    {
-        "participle": "thrown",
-        "translation": "lanzar",
-        "ipaInfinitive": "/θroʊ/",
-        "ipaPast": "/θruː/",
-        "ipaParticiple": "/θroʊn/"
-    },
+    // {
+    //     "participle": "thrown",
+    //     "translation": "lanzar",
+    //     "ipaInfinitive": "/θroʊ/",
+    //     "ipaPast": "/θruː/",
+    //     "ipaParticiple": "/θroʊn/"
+    // },
 
 
     {
@@ -894,14 +894,14 @@ const verbs = [
     },
 
 
-    {
-        "infinitive": "write",
-        "past": "wrote",
-        "participle": "written",
-        "translation": "escribir",
-        "ipaInfinitive": "/raɪt/",
-        "ipaPast": "/roʊt/",
-        "ipaParticiple": "/ˈrɪtən/"
-    }
+    // {
+    //     "infinitive": "write",
+    //     "past": "wrote",
+    //     "participle": "written",
+    //     "translation": "escribir",
+    //     "ipaInfinitive": "/raɪt/",
+    //     "ipaPast": "/roʊt/",
+    //     "ipaParticiple": "/ˈrɪtən/"
+    // }
 ]
 

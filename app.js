@@ -152,8 +152,14 @@ function renderVerbTable() {
     verbTableBody.innerHTML = "";
 
 
-    verbs.forEach(verb => {
-
+   verbs
+    .filter(verb =>
+        verb.group &&
+        verb.infinitive &&
+        verb.past &&
+        verb.participle
+    )
+    .forEach(verb => {
         const row =
             document.createElement("tr");
 
