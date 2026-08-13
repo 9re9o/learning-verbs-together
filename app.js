@@ -840,6 +840,16 @@ function getCurrentIPA() {
 
     return "";
 }
+function activateModeButton(selectedButton) {
+
+    document
+        .querySelectorAll(".mode-btn")
+        .forEach(button =>
+            button.classList.remove("active")
+        );
+
+    selectedButton.classList.add("active");
+}
 // =============================
 // BOTONES
 // =============================
@@ -964,11 +974,13 @@ document
 
         practiceMode = "complete";
 
-        this.classList.add("active");
-
         document
-            .getElementById("identifyMode")
-            .classList.remove("active");
+            .querySelectorAll(".mode-btn")
+            .forEach(button =>
+                button.classList.remove("active")
+            );
+
+        this.classList.add("active");
 
         newQuestion();
     });
@@ -979,15 +991,16 @@ document
 
         practiceMode = "identify";
 
-        this.classList.add("active");
-
         document
-            .getElementById("completeMode")
-            .classList.remove("active");
+            .querySelectorAll(".mode-btn")
+            .forEach(button =>
+                button.classList.remove("active")
+            );
+
+        this.classList.add("active");
 
         newQuestion();
     });
-
 document
     .getElementById("selectMode")
     .addEventListener("click", function () {
