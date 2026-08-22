@@ -2,16 +2,35 @@
     box-sizing: border-box;
 }
 
+:root {
+
+    --bg: #0d1117;
+    --text: #f1f5f9;
+
+    --card: #151b24;
+
+    --border: #273244;
+
+    --secondary-text: #8b9bb0;
+
+}
+
+
 body {
+
     margin: 0;
 
     font-family: Arial, Helvetica, sans-serif;
 
-    background: #0d1117;
-    color: #f1f5f9;
+    background: var(--bg);
+
+    color: var(--text);
 
     min-height: 100vh;
+
 }
+
+
 
 .app {
     width: 100%;
@@ -46,13 +65,13 @@ h1 {
 
     font-size: 30px;
 
-    color: #ffffff;
+    color: var(--text);
 }
 
 .subtitle {
     margin-top: 8px;
 
-    color: #8b9bb0;
+    color: var(--secondary-text);
 
     font-size: 14px;
     line-height: 1.5;
@@ -74,13 +93,14 @@ h1 {
 .group-btn {
     flex: 1;
 
-    padding: 10px 5px;
+    padding: 8px 8px;
+    font-size:13px;
 
     border: 1px solid #273244;
 
     border-radius: 10px;
 
-    background: #151b24;
+    background: var(--card);
     color: #9ca9ba;
 
     cursor: pointer;
@@ -102,15 +122,13 @@ h1 {
 ========================= */
 
 .card {
-    background: #151b24;
-
-    border: 1px solid #222c3b;
-
-    border-radius: 20px;
-
-    padding: 22px 20px;
-
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.30);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 22px 20px 24px;
+    box-shadow:
+        0 10px 30px #0d1117;
+    ;
 }
 
 
@@ -162,8 +180,8 @@ h1 {
 ========================= */
 
 .question-text {
-    margin-top: 32px;
-    margin-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 8px;
 
     color: #8190a5;
 
@@ -189,15 +207,13 @@ h1 {
 }
 
 h2 {
-    margin: 0;
 
-    font-size: 50px;
+    margin:0;
 
-    text-align: center;
+    font-size:46px;
 
-    color: #ffffff;
+    font-weight:700;
 
-    letter-spacing: 1px;
 }
 
 
@@ -243,8 +259,8 @@ h2 {
 
     font-size: 14px;
 
-    margin-top: 8px;
-    margin-bottom: 28px;
+    margin-top: 6px;
+    margin-bottom: 22px;
 }
 
 
@@ -331,15 +347,15 @@ input:focus {
 ========================= */
 
 .result {
-    min-height: 60px;
-
+    min-height: 0px;
     margin-top: 15px;
-
     text-align: center;
-
     line-height: 1.5;
-
     border-radius: 12px;
+}
+
+.result:empty {
+    display: none;
 }
 
 .correct {
@@ -391,7 +407,7 @@ input:focus {
     margin-top: 20px;
 }
 
-.mode-selector > p {
+.mode-selector>p {
     font-size: 12px;
 
     color: #718096;
@@ -416,7 +432,7 @@ input:focus {
 
     border: 1px solid #273244;
 
-    background: #151b24;
+    background: var(--card);
 
     color: #8593a6;
 
@@ -471,6 +487,7 @@ input:focus {
 
     font-weight: normal;
 }
+
 /* =========================
    BOTÓN LISTA
 ========================= */
@@ -485,7 +502,7 @@ input:focus {
     border: 1px solid #273244;
     border-radius: 12px;
 
-    background: #151b24;
+    background: var(--card);
     color: #d7dfeb;
 
     font-weight: bold;
@@ -501,14 +518,14 @@ input:focus {
 .verb-list-section {
     margin-top: 16px;
 
-    background: #151b24;
+    background: var(--card);
 
     border: 1px solid #222c3b;
     border-radius: 18px;
 
     padding: 18px;
 
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 
@@ -572,6 +589,38 @@ table {
     background: #10161f;
 }
 
+body.light table {
+
+    background: #f8fafc;
+
+}
+
+
+body.light th {
+
+    background: #e8eef7;
+
+    color: #3b82f6;
+
+    border-bottom: 1px solid #dbe3ee;
+
+}
+
+
+body.light td {
+
+    color: #334155;
+
+    border-bottom: 1px solid #e2e8f0;
+
+}
+
+
+body.light tbody tr:hover {
+
+    background: #eef4ff;
+
+}
 
 th {
     padding: 13px 12px;
@@ -689,7 +738,7 @@ td:first-child {
     width: 100%;
     max-width: 420px;
 
-    background: #151b24;
+    background: var(--card);
 
     border: 1px solid #2c394c;
     border-radius: 22px;
@@ -926,4 +975,184 @@ td:first-child {
 
 .form-options.hidden {
     display: none;
+}
+
+/* theme */
+/* =========================
+   THEME BUTTON
+========================= */
+
+.theme-toggle {
+
+    position: fixed;
+
+    top: 18px;
+    right: 18px;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    border: 1px solid #273244;
+
+    background: var(--card);
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+
+}
+
+
+.theme-toggle:active {
+
+    transform: scale(0.92);
+
+}
+
+/* =========================
+   LIGHT MODE OVERRIDES (Mejorado)
+========================= */
+
+body.light {
+    /* Fondo ligeramente más oscuro/azulado para quitar el blanco puro */
+    --bg: #e2e8f0;
+    --text: #1e293b;
+    /* Tarjeta en un gris/azulado muy suave, reduciendo el brillo */
+    --card: #f1f5f9;
+    --border: #cbd5e1;
+    --secondary-text: #64748b;
+}
+
+body.light .card {
+    background: var(--card);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+    /* Sombra más sutil */
+}
+
+/* 1. BOTONES DE GRUPO Y MODO (Inactivos) */
+body.light .group-btn,
+body.light .mode-btn {
+    background: #e2e8f0;
+    /* Un poco más oscuros que la tarjeta para hundirlos visualmente */
+    color: #64748b;
+    border-color: #cbd5e1;
+}
+
+/* 2. BOTONES DE GRUPO Y MODO (Activos) */
+body.light .group-btn.active,
+body.light .mode-btn.active {
+    background: #3b82f6;
+    /* Azul primario para dejar claro qué está seleccionado */
+    color: #ffffff;
+    border-color: #3b82f6;
+}
+
+/* 3. INPUT */
+body.light input {
+    background: #e2e8f0;
+    /* Fondo gris para diferenciarlo de la tarjeta */
+    color: #1e293b;
+    border: 2px solid #cbd5e1;
+}
+
+body.light input:focus {
+    background: #ffffff;
+    /* Se ilumina a blanco puro SOLO al escribir */
+    border-color: #3b82f6;
+}
+
+/* 4. BOTÓN PRINCIPAL ("Comprobar") */
+/* En tu CSS original no lo sobreescribiste para light mode, lo arreglamos aquí */
+body.light .main-button {
+    background: #0f172a;
+    /* Un color oscuro fuerte para el Call To Action */
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+body.light .main-button:active {
+    background: #1e293b;
+}
+
+/* 5. BOTONES SECUNDARIOS (Siguiente, Ver lista) */
+body.light .secondary-button,
+body.light .list-button {
+    background: #e2e8f0;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+body.light .secondary-button:active,
+body.light .list-button:active {
+    background: #cbd5e1;
+}
+
+/* 6. BOTONES DE AUDIO Y ETIQUETA DE MODO */
+body.light .speak-button,
+body.light .modal-speak,
+body.light .answer-audio {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #3b82f6;
+    /* Icono en azul para invitar al clic */
+}
+
+body.light .mode {
+    background: #dbeafe;
+    /* Fondo azul muy clarito */
+    color: #1d4ed8;
+    /* Texto azul oscuro */
+}
+
+/* 7. MODAL Y LISTA COMPLETA */
+body.light .verb-list-section,
+body.light .verb-modal-content {
+    background: var(--card);
+    border-color: var(--border);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+}
+
+/* 8. TABLAS */
+body.light table {
+    background: var(--card);
+}
+
+body.light th {
+    background: #e2e8f0;
+    color: #475569;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+body.light td {
+    color: #334155;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body.light tbody tr:hover {
+    background: #e2e8f0;
+}
+
+/* 9. TEXTOS IMPORTANTES Y BOTÓN THEME */
+body.light h1,
+body.light h2,
+body.light .correct-answer,
+body.light #modalVerbTitle {
+    color: #0f172a;
+}
+
+body.light .theme-toggle {
+    background: var(--card);
+    color: #0f172a;
+    border-color: #cbd5e1;
 }

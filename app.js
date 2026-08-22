@@ -13,6 +13,78 @@ let requestedForm;
 let correctAnswers = 0;
 
 // =============================
+// DARK / LIGHT MODE
+// =============================
+
+
+const themeToggle =
+    document.getElementById("themeToggle");
+
+
+// cargar preferencia
+
+const savedTheme =
+    localStorage.getItem("theme");
+
+
+if(savedTheme === "light"){
+
+    document.body.classList.add("light");
+
+    themeToggle.textContent = "🌙";
+
+}
+else{
+
+    themeToggle.textContent = "☀️";
+
+}
+
+
+// cambiar tema
+
+if (themeToggle) {
+
+    themeToggle.addEventListener(
+        "click",
+        function () {
+
+            document.body.classList.toggle("light");
+
+
+            const isLight =
+                document.body.classList.contains("light");
+
+
+            if (isLight) {
+
+                themeToggle.textContent = "🌙";
+
+                localStorage.setItem(
+                    "theme",
+                    "light"
+                );
+
+            }
+
+            else {
+
+                themeToggle.textContent = "☀️";
+
+                localStorage.setItem(
+                    "theme",
+                    "dark"
+                );
+
+            }
+        });
+
+}
+
+//     }
+// );
+
+// =============================
 // ELEMENTOS HTML
 // =============================
 
@@ -83,60 +155,6 @@ const checkButton =
     document.getElementById("checkButton");
 
 
-// =============================
-// CARGAR JSON
-// =============================
-
-// async function startApp() {
-
-//     try {
-
-//         const response =
-//             await fetch("./verbs.json");
-
-//         if (!response.ok) {
-//             throw new Error(
-//                 `Error HTTP: ${response.status}`
-//             );
-//         }
-
-//         verbs =
-//             (await response.json())
-//                 .flat()
-//                 .filter(verb =>
-//                     verb.group &&
-//                     verb.infinitive
-//                 );
-
-//         console.log(
-//             "Verbos cargados:",
-//             verbs
-//         );
-
-//         console.log(
-//             "Cantidad válida:",
-//             verbs.length
-//         );
-
-//     }
-//     catch (error) {
-
-//         console.error(
-//             "No se pudo cargar verbs.json:",
-//             error
-//         );
-
-//         result.innerHTML = `
-//             ❌ No se pudo cargar verbs.json.
-//             <br>
-//             Revisa la consola.
-//         `;
-
-//         return;
-//     }
-
-
-//     newQuestion();
 // }
 // =============================
 // OBTENER LISTA
@@ -1010,7 +1028,9 @@ function activateModeButton(selectedButton) {
             button.classList.remove("active")
         );
 
+
     selectedButton.classList.add("active");
+
 }
 // =============================
 // BOTONES
@@ -1136,13 +1156,7 @@ document
 
         practiceMode = "complete";
 
-        document
-            .querySelectorAll(".mode-btn")
-            .forEach(button =>
-                button.classList.remove("active")
-            );
-
-        this.classList.add("active");
+        activateModeButton(this);
 
         newQuestion();
     });
@@ -1153,13 +1167,7 @@ document
 
         practiceMode = "identify";
 
-        document
-            .querySelectorAll(".mode-btn")
-            .forEach(button =>
-                button.classList.remove("active")
-            );
-
-        this.classList.add("active");
+        activateModeButton(this);
 
         newQuestion();
     });
@@ -1169,13 +1177,7 @@ document
 
         practiceMode = "select";
 
-        document
-            .querySelectorAll(".mode-btn")
-            .forEach(button =>
-                button.classList.remove("active")
-            );
-
-        this.classList.add("active");
+       activateModeButton(this);
 
         newQuestion();
     });
