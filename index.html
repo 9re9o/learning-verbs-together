@@ -13,7 +13,7 @@
 
 
 <body>
-<main class="app">
+<main class="app" aria-busy="true">
 
     <header class="app-header">
         <div class="header-copy">
@@ -64,15 +64,15 @@
     <section class="groups">
 
         <button class="group-btn" data-group="review" data-i18n="groups.review" aria-pressed="false">
-            15 primeros verbos
+            Primer grupo
         </button>
 
         <button class="group-btn active" data-group="current" data-i18n="groups.current" aria-pressed="true">
-            20 siguientes
+            Segundo grupo
         </button>
 
         <button class="group-btn" data-group="future" data-i18n="groups.future" aria-pressed="false">
-            Últimos 37
+            Último grupo
         </button>
 
         <button class="group-btn" data-group="all" data-i18n="groups.all" aria-pressed="false">
@@ -88,25 +88,25 @@
         <div class="top-card">
 
             <span id="modeLabel" class="mode">
-                PAST SIMPLE
+                —
             </span>
 
             <span id="counter">
-                0 correctas
+                0
             </span>
 
         </div>
 
 
         <p id="questionText" class="question-text">
-            Escribe el Past Simple de:
+            …
         </p>
 
 
         <div class="verb-container">
 
             <h2 id="verbWord">
-                drink
+                …
             </h2>
 
             <button id="speakQuestion" class="speak-button" data-i18n-aria-label="buttons.listenPronunciation" aria-label="Escuchar pronunciación">
@@ -116,7 +116,6 @@
         </div>
 
         <p id="phonetic" class="phonetic">
-            /drɪŋk/
         </p>
 
 
@@ -226,12 +225,10 @@
 
 
                 <h3 id="modalVerbTitle">
-                    drive
                 </h3>
 
 
                 <p id="modalTranslation" class="modal-translation">
-                    conducir
                 </p>
 
 
@@ -248,11 +245,9 @@
                         <div>
 
                             <strong id="modalInfinitive">
-                                drive
                             </strong>
 
                             <span id="modalIpaInfinitive">
-                                /draɪv/
                             </span>
 
                         </div>
@@ -280,11 +275,9 @@
                         <div>
 
                             <strong id="modalPast">
-                                drove
                             </strong>
 
                             <span id="modalIpaPast">
-                                /droʊv/
                             </span>
 
                         </div>
@@ -312,11 +305,9 @@
                         <div>
 
                             <strong id="modalParticiple">
-                                driven
                             </strong>
 
                             <span id="modalIpaParticiple">
-                                /ˈdrɪvən/
                             </span>
 
                         </div>

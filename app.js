@@ -25,9 +25,9 @@ const TRANSLATIONS = {
         },
         groups: {
             title: "Grupo de verbos",
-            review: "15 primeros verbos",
-            current: "20 siguientes",
-            future: "Últimos 38",
+            review: "primer grupo",
+            current: "segundo grupo",
+            future: "Último grupo",
             all: "Todos"
         },
         questions: {
@@ -88,9 +88,9 @@ const TRANSLATIONS = {
         },
         groups: {
             title: "Verb group",
-            review: "First 15 verbs",
-            current: "Next 20",
-            future: "Last 38",
+            review: "First group",
+            current: "Second group",
+            future: "Last group",
             all: "All"
         },
         questions: {
@@ -329,7 +329,7 @@ function createElement(tagName, className = "", text = "") {
     return element;
 }
 
-function showAnswerFeedback(isCorrect, word, ipa) {
+function showAnswerFeedback(isCorrect, word, ipa, form) {
     elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
     const status = createElement(
         "div",
@@ -344,7 +344,7 @@ function showAnswerFeedback(isCorrect, word, ipa) {
         `🔊 ${t(isCorrect ? "buttons.listen" : "buttons.listenAnswer")}`
     );
     audioButton.type = "button";
-    audioButton.addEventListener("click", () => speak(word));
+    audioButton.addEventListener("click", () => speak(word, form));
     elements.result.replaceChildren(status, answerWord, answerPhonetic, audioButton);
 }
 
@@ -400,7 +400,12 @@ function checkAnswer() {
         const possibleAnswers = correctAnswer.toLowerCase().split("/").map(item => item.trim());
         const isCorrect = possibleAnswers.includes(userAnswer);
         setQuestionLocked(true);
-        showAnswerFeedback(isCorrect, correctAnswer, getIPAByForm(currentVerb, requestedForm));
+        showAnswerFeedback(
+            isCorrect,
+            correctAnswer,
+            getIPAByForm(currentVerb, requestedForm),
+            requestedForm
+        );
         if (isCorrect) {
             addCorrectAnswer();
         }
@@ -519,7 +524,7 @@ function openVerbModal(verb) {
     modalForms.forEach(([form, wordElement, ipaElement, audioButton]) => {
         wordElement.textContent = verb[form];
         ipaElement.textContent = getIPAByForm(verb, form);
-        audioButton.onclick = () => speak(verb[form]);
+        audioButton.onclick = () => speak(verb[form], form);
     });
     elements.verbModal.classList.remove("hidden");
     elements.verbModal.setAttribute("aria-hidden", "false");
@@ -560,13 +565,21 @@ function trapModalFocus(event) {
     }
 }
 
-function speak(text) {
+function getSpeechText(text, form) {
+    const firstVariant = text.split("/")[0].trim();
+    if (firstVariant.toLowerCase() === "read" && form !== "infinitive") {
+        return "red";
+    }
+    return firstVariant;
+}
+
+function speak(text, form = "infinitive") {
     if (!("speechSynthesis" in window)) {
         alert(t("errors.speechUnsupported"));
         return;
     }
     window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(text.split("/")[0].trim());
+    const speech = new SpeechSynthesisUtterance(getSpeechText(text, form));
     speech.lang = "en-US";
     speech.rate = 0.8;
     speech.pitch = 1;
@@ -615,7 +628,8 @@ function bindEvents() {
     elements.checkButton.addEventListener("click", checkAnswer);
     elements.nextButton.addEventListener("click", newQuestion);
     document.getElementById("speakQuestion").addEventListener("click", () => {
-        speak(elements.verbWord.textContent.trim());
+        const displayedForm = practiceMode === "complete" ? "infinitive" : requestedForm;
+        speak(elements.verbWord.textContent.trim(), displayedForm);
     });
     elements.answer.addEventListener("keydown", event => {
         if (event.key === "Enter") {
@@ -675,6 +689,7 @@ function startApp() {
     bindEvents();
     applyLanguage();
     newQuestion();
+    document.querySelector(".app").setAttribute("aria-busy", "false");
 }
 
 startApp();
