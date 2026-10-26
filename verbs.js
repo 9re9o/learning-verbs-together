@@ -167,16 +167,6 @@ const verbs = [
         "ipaParticiple": "/dʌn/"
     },
 
-    // {
-    //     "past": "did",
-    //     "participle": "done",
-    //     "translation": "hacer",
-    //     "ipaInfinitive": "/duː/",
-    //     "ipaPast": "/dɪd/",
-    //     "ipaParticiple": "/dʌn/"
-    // },
-
-
     {
         "group": "review",
         "infinitive": "draw",
@@ -599,15 +589,6 @@ const verbs = [
     },
 
 
-    // {
-    //     "participle": "said",
-    //     "translation": "decir",
-    //     "ipaInfinitive": "/seɪ/",
-    //     "ipaPast": "/sɛd/",
-    //     "ipaParticiple": "/sɛd/"
-    // },
-
-
     {
         "group": "future",
         "infinitive": "see",
@@ -835,15 +816,6 @@ const verbs = [
         "ipaParticiple": "/θroʊn/"
     },
 
-    // {
-    //     "participle": "thrown",
-    //     "translation": "lanzar",
-    //     "ipaInfinitive": "/θroʊ/",
-    //     "ipaPast": "/θruː/",
-    //     "ipaParticiple": "/θroʊn/"
-    // },
-
-
     {
         "group": "future",
         "infinitive": "understand",
@@ -904,14 +876,5 @@ const verbs = [
     },
 
 
-    // {
-    //     "infinitive": "write",
-    //     "past": "wrote",
-    //     "participle": "written",
-    //     "translation": "escribir",
-    //     "ipaInfinitive": "/raɪt/",
-    //     "ipaPast": "/roʊt/",
-    //     "ipaParticiple": "/ˈrɪtən/"
-    // }
 ]
 

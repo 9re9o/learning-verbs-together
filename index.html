@@ -10,313 +10,321 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+
+
 <body>
-    <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
-        ☀️
-    </button>
+<main class="app">
 
-    <main class="app">
-
-        <header>
-            <!-- <p class="small-title">ENGLISH PRACTICE</p> -->
-            <h1>Irregular Verbs</h1>
-            <p class="subtitle">Practica escribiendo, no memorizando una tabla.</p>
-        </header>
-
-        <!-- MODO -->
-        <section class="mode-selector">
-
-            <p>Tipo de práctica</p>
-
-            <div class="mode-buttons">
-
-                <button id="completeMode" class="mode-btn active">
-                    Completar
-                </button>
-
-                <button id="identifyMode" class="mode-btn">
-                    Identificar forma
-                </button>
-
-                <button id="selectMode" class="mode-btn">
-                    Seleccionar forma
-                </button>
-
-            </div>
-
-        </section>
-
-        <hr>
-
-
-        <!-- GRUPO DE ESTUDIO -->
-        <p class="subtitle">Grupo de verbos</p>
-        <section class="groups">
-
-            <button class="group-btn" data-group="review">
-                15 primeros verbos
-            </button>
-
-            <button class="group-btn active" data-group="current">
-                20 siguientes
-            </button>
-
-            <button class="group-btn" data-group="future">
-                Últimos 18
-            </button>
-
-            <button class="group-btn" data-group="all">
-                Todos
-            </button>
-
-        </section>
-
-
-        <!-- TARJETA -->
-        <section class="card">
-
-            <div class="top-card">
-
-                <span id="modeLabel" class="mode">
-                    PAST SIMPLE
-                </span>
-
-                <span id="counter">
-                    0 correctas
-                </span>
-
-            </div>
-
-
-            <p id="questionText" class="question-text">
-                Escribe el Past Simple de:
+    <header class="app-header">
+        <div class="header-copy">
+            <h1 data-i18n="app.title">Irregular Verbs</h1>
+            <p class="subtitle" data-i18n="app.subtitle">
+                Practica escribiendo, no memorizando una tabla.
             </p>
+        </div>
 
+        <div class="top-controls">
+            <button id="languageToggle" class="language-toggle" type="button" aria-label="Cambiar a inglés">
+                EN
+            </button>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Activar tema claro">
+                ☀️
+            </button>
+        </div>
+    </header>
 
-            <div class="verb-container">
+    <!-- MODO -->
+    <section class="mode-selector">
 
-                <h2 id="verbWord">
-                    drink
-                </h2>
+        <p data-i18n="practice.type">Tipo de práctica</p>
 
-                <button id="speakQuestion" class="speak-button" aria-label="Escuchar pronunciación">
-                    🔊
-                </button>
+        <div class="mode-buttons">
 
-            </div>
-
-            <p id="phonetic" class="phonetic">
-                /drɪŋk/
-            </p>
-
-
-
-
-            <input type="text" id="answer" placeholder="Escribe tu respuesta..." autocomplete="off"
-                autocapitalize="none" spellcheck="false">
-
-            <div id="formOptions" class="form-options hidden">
-
-                <button data-form="infinitive" class="form-option">
-                    Infinitive
-                </button>
-
-                <button data-form="past" class="form-option">
-                    Past Simple
-                </button>
-
-                <button data-form="participle" class="form-option">
-                    Past Participle
-                </button>
-
-            </div>
-
-            <button id="checkButton" class="main-button">
-                Comprobar
+            <button id="completeMode" class="mode-btn active" data-mode="complete" data-i18n="practice.complete">
+                Completar
             </button>
 
-
-            <div id="result" class="result"></div>
-
-
-            <button id="nextButton" class="secondary-button">
-                Siguiente verbo →
+            <button id="identifyMode" class="mode-btn" data-mode="identify" data-i18n="practice.identify">
+                Identificar forma
             </button>
 
-        </section>
+            <button id="selectMode" class="mode-btn" data-mode="select" data-i18n="practice.select">
+                Seleccionar forma
+            </button>
 
-        <button id="showVerbList" class="list-button">
-            📚 Ver lista completa
+        </div>
+
+    </section>
+
+    <hr>
+
+
+    <!-- GRUPO DE ESTUDIO -->
+    <p class="subtitle" data-i18n="groups.title">Grupo de verbos</p>
+    <section class="groups">
+
+        <button class="group-btn" data-group="review" data-i18n="groups.review">
+            15 primeros verbos
+        </button>
+
+        <button class="group-btn active" data-group="current" data-i18n="groups.current">
+            20 siguientes
+        </button>
+
+        <button class="group-btn" data-group="future" data-i18n="groups.future">
+            Últimos 38
+        </button>
+
+        <button class="group-btn" data-group="all" data-i18n="groups.all">
+            Todos
+        </button>
+
+    </section>
+
+
+    <!-- TARJETA -->
+    <section class="card">
+
+        <div class="top-card">
+
+            <span id="modeLabel" class="mode">
+                PAST SIMPLE
+            </span>
+
+            <span id="counter">
+                0 correctas
+            </span>
+
+        </div>
+
+
+        <p id="questionText" class="question-text">
+            Escribe el Past Simple de:
+        </p>
+
+
+        <div class="verb-container">
+
+            <h2 id="verbWord">
+                drink
+            </h2>
+
+            <button id="speakQuestion" class="speak-button" aria-label="Escuchar pronunciación">
+                🔊
+            </button>
+
+        </div>
+
+        <p id="phonetic" class="phonetic">
+            /drɪŋk/
+        </p>
+
+
+
+
+        <input type="text" id="answer" placeholder="Escribe tu respuesta..." data-i18n-placeholder="answer.placeholder" autocomplete="off" autocapitalize="none"
+            spellcheck="false">
+
+        <div id="formOptions" class="form-options hidden">
+
+            <button data-form="infinitive" class="form-option" data-i18n="forms.infinitive">
+                Infinitive
+            </button>
+
+            <button data-form="past" class="form-option" data-i18n="forms.past">
+                Past Simple
+            </button>
+
+            <button data-form="participle" class="form-option" data-i18n="forms.participle">
+                Past Participle
+            </button>
+
+        </div>
+
+        <button id="checkButton" data-i18n="buttons.check" class="main-button">
+            Comprobar
         </button>
 
 
-        <section id="verbListSection" class="verb-list-section hidden">
-
-            <div class="list-header">
-
-                <div>
-                    <p class="small-title">
-                        IRREGULAR VERBS
-                    </p>
-
-                    <h3>
-                        Lista completa
-                    </h3>
-                </div>
+        <div id="result" class="result"></div>
 
 
-                <button id="closeVerbList" class="close-button">
-                    ✕
-                </button>
+        <button id="nextButton" data-i18n="buttons.next" class="secondary-button">
+            Siguiente verbo →
+        </button>
 
+    </section>
+
+    <button id="showVerbList" data-i18n="buttons.list" class="list-button">
+        📚 Ver lista completa
+    </button>
+
+
+    <section id="verbListSection" class="verb-list-section hidden">
+
+        <div class="list-header">
+
+            <div>
+                <p class="small-title" data-i18n="list.eyebrow">
+                    IRREGULAR VERBS
+                </p>
+
+                <h3 data-i18n="list.title">
+                    Lista completa
+                </h3>
             </div>
 
 
-            <div class="table-container">
+            <button id="closeVerbList" class="close-button" data-i18n-aria-label="buttons.close" aria-label="Cerrar">
+                ✕
+            </button>
 
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Infinitive</th>
-                            <th>Past Simple</th>
-                            <th>Past Participle</th>
-                            <th>Español</th>
-                        </tr>
-
-                    </thead>
+        </div>
 
 
-                    <tbody id="verbTableBody">
+        <div class="table-container">
 
-                        <!-- JavaScript agrega los verbos -->
+            <table>
 
-                    </tbody>
+                <thead>
 
-                </table>
+                    <tr>
+                        <th data-i18n="forms.infinitive">Infinitive</th>
+                        <th data-i18n="forms.past">Past Simple</th>
+                        <th data-i18n="forms.participle">Past Participle</th>
+                        <th data-i18n="list.translation">Español</th>
+                    </tr>
 
-            </div>
-            <!-- =========================
+                </thead>
+
+
+                <tbody id="verbTableBody">
+
+                    <!-- JavaScript agrega los verbos -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+        <!-- =========================
      MODAL DETALLE DEL VERBO
 ========================= -->
 
-            <div id="verbModal" class="verb-modal hidden">
+        <div id="verbModal" class="verb-modal hidden">
 
-                <div class="verb-modal-content">
+            <div class="verb-modal-content">
 
-                    <button id="closeVerbModal" class="modal-close" aria-label="Cerrar">
-                        ✕
-                    </button>
-
-
-                    <p class="modal-small-title">
-                        IRREGULAR VERB
-                    </p>
+                <button id="closeVerbModal" class="modal-close" data-i18n-aria-label="buttons.close" aria-label="Cerrar">
+                    ✕
+                </button>
 
 
-                    <h3 id="modalVerbTitle">
-                        drive
-                    </h3>
+                <p class="modal-small-title" data-i18n="modal.eyebrow">
+                    IRREGULAR VERB
+                </p>
 
 
-                    <p id="modalTranslation" class="modal-translation">
-                        conducir
-                    </p>
+                <h3 id="modalVerbTitle">
+                    drive
+                </h3>
 
 
-                    <!-- INFINITIVE -->
-
-                    <div class="modal-form">
-
-                        <div class="modal-form-header">
-                            INFINITIVE
-                        </div>
-
-                        <div class="modal-form-content">
-
-                            <div>
-
-                                <strong id="modalInfinitive">
-                                    drive
-                                </strong>
-
-                                <span id="modalIpaInfinitive">
-                                    /draɪv/
-                                </span>
-
-                            </div>
+                <p id="modalTranslation" class="modal-translation">
+                    conducir
+                </p>
 
 
-                            <button id="speakInfinitive" class="modal-speak">
-                                🔊
-                            </button>
+                <!-- INFINITIVE -->
+
+                <div class="modal-form">
+
+                    <div class="modal-form-header" data-i18n="forms.infinitive">
+                        INFINITIVE
+                    </div>
+
+                    <div class="modal-form-content">
+
+                        <div>
+
+                            <strong id="modalInfinitive">
+                                drive
+                            </strong>
+
+                            <span id="modalIpaInfinitive">
+                                /draɪv/
+                            </span>
 
                         </div>
+
+
+                        <button id="speakInfinitive" class="modal-speak" data-i18n-aria-label="buttons.listen" aria-label="Escuchar">
+                            🔊
+                        </button>
 
                     </div>
 
-
-                    <!-- PAST SIMPLE -->
-
-                    <div class="modal-form">
-
-                        <div class="modal-form-header">
-                            PAST SIMPLE
-                        </div>
-
-                        <div class="modal-form-content">
-
-                            <div>
-
-                                <strong id="modalPast">
-                                    drove
-                                </strong>
-
-                                <span id="modalIpaPast">
-                                    /droʊv/
-                                </span>
-
-                            </div>
+                </div>
 
 
-                            <button id="speakPast" class="modal-speak">
-                                🔊
-                            </button>
+                <!-- PAST SIMPLE -->
+
+                <div class="modal-form">
+
+                    <div class="modal-form-header" data-i18n="forms.past">
+                        PAST SIMPLE
+                    </div>
+
+                    <div class="modal-form-content">
+
+                        <div>
+
+                            <strong id="modalPast">
+                                drove
+                            </strong>
+
+                            <span id="modalIpaPast">
+                                /droʊv/
+                            </span>
 
                         </div>
+
+
+                        <button id="speakPast" class="modal-speak" data-i18n-aria-label="buttons.listen" aria-label="Escuchar">
+                            🔊
+                        </button>
 
                     </div>
 
-
-                    <!-- PAST PARTICIPLE -->
-
-                    <div class="modal-form">
-
-                        <div class="modal-form-header">
-                            PAST PARTICIPLE
-                        </div>
-
-                        <div class="modal-form-content">
-
-                            <div>
-
-                                <strong id="modalParticiple">
-                                    driven
-                                </strong>
-
-                                <span id="modalIpaParticiple">
-                                    /ˈdrɪvən/
-                                </span>
-
-                            </div>
+                </div>
 
 
-                            <button id="speakParticiple" class="modal-speak">
-                                🔊
-                            </button>
+                <!-- PAST PARTICIPLE -->
+
+                <div class="modal-form">
+
+                    <div class="modal-form-header" data-i18n="forms.participle">
+                        PAST PARTICIPLE
+                    </div>
+
+                    <div class="modal-form-content">
+
+                        <div>
+
+                            <strong id="modalParticiple">
+                                driven
+                            </strong>
+
+                            <span id="modalIpaParticiple">
+                                /ˈdrɪvən/
+                            </span>
 
                         </div>
+
+
+                        <button id="speakParticiple" class="modal-speak" data-i18n-aria-label="buttons.listen" aria-label="Escuchar">
+                            🔊
+                        </button>
 
                     </div>
 
@@ -324,14 +332,16 @@
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
 
-    </main>
+</main>
+<script src="verbs.js"></script>
 
-    <script src="verbs.js"></script>
-    <script src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 

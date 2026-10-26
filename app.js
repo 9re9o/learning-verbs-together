@@ -1,1356 +1,564 @@
+const TRANSLATIONS = {
+    es: {
+        app: {
+            title: "Irregular Verbs",
+            subtitle: "Practica escribiendo, no memorizando una tabla."
+        },
+        buttons: {
+            check: "Comprobar",
+            next: "Siguiente verbo →",
+            list: "📚 Ver lista completa",
+            close: "Cerrar",
+            listen: "Escuchar",
+            listenAnswer: "Escuchar respuesta",
+            switchLanguage: "Cambiar a inglés",
+            lightTheme: "Activar tema claro",
+            darkTheme: "Activar tema oscuro"
+        },
+        answer: { placeholder: "Escribe tu respuesta..." },
+        practice: {
+            type: "Tipo de práctica",
+            complete: "Completar",
+            identify: "Identificar forma",
+            select: "Seleccionar forma"
+        },
+        groups: {
+            title: "Grupo de verbos",
+            review: "15 primeros verbos",
+            current: "20 siguientes",
+            future: "Últimos 38",
+            all: "Todos"
+        },
+        questions: {
+            writePast: "Escribe el Past Simple de:",
+            writeParticiple: "Escribe el Past Participle de:",
+            identify: "¿Qué forma verbal es?",
+            select: "Selecciona qué forma verbal es:"
+        },
+        forms: {
+            infinitive: "Infinitive",
+            past: "Past Simple",
+            participle: "Past Participle"
+        },
+        results: {
+            correct: "Correcto",
+            incorrect: "Incorrecto",
+            validForm: "Forma válida:",
+            validForms: "Formas válidas:",
+            wordCanBe: "Esta palabra también puede ser:",
+            writeHint: "Escribe:",
+            noVerbs: "No hay verbos disponibles en este grupo."
+        },
+        counter: {
+            one: "{count} correcta",
+            many: "{count} correctas"
+        },
+        list: {
+            eyebrow: "IRREGULAR VERBS",
+            title: "Lista completa",
+            translation: "Español"
+        },
+        modal: { eyebrow: "IRREGULAR VERB" },
+        errors: { speechUnsupported: "Tu navegador no soporta pronunciación por voz." }
+    },
+    en: {
+        app: {
+            title: "Irregular Verbs",
+            subtitle: "Practice writing, not memorizing a table."
+        },
+        buttons: {
+            check: "Check",
+            next: "Next verb →",
+            list: "📚 View complete list",
+            close: "Close",
+            listen: "Listen",
+            listenAnswer: "Listen to answer",
+            switchLanguage: "Switch to Spanish",
+            lightTheme: "Use light theme",
+            darkTheme: "Use dark theme"
+        },
+        answer: { placeholder: "Type your answer..." },
+        practice: {
+            type: "Practice type",
+            complete: "Complete",
+            identify: "Identify form",
+            select: "Select form"
+        },
+        groups: {
+            title: "Verb group",
+            review: "First 15 verbs",
+            current: "Next 20",
+            future: "Last 38",
+            all: "All"
+        },
+        questions: {
+            writePast: "Write the Past Simple of:",
+            writeParticiple: "Write the Past Participle of:",
+            identify: "Which verb form is it?",
+            select: "Select the verb form:"
+        },
+        forms: {
+            infinitive: "Infinitive",
+            past: "Past Simple",
+            participle: "Past Participle"
+        },
+        results: {
+            correct: "Correct",
+            incorrect: "Incorrect",
+            validForm: "Valid form:",
+            validForms: "Valid forms:",
+            wordCanBe: "This word can also be:",
+            writeHint: "Type:",
+            noVerbs: "There are no verbs available in this group."
+        },
+        counter: {
+            one: "{count} correct",
+            many: "{count} correct"
+        },
+        list: {
+            eyebrow: "IRREGULAR VERBS",
+            title: "Complete list",
+            translation: "Spanish"
+        },
+        modal: { eyebrow: "IRREGULAR VERB" },
+        errors: { speechUnsupported: "Your browser does not support text-to-speech." }
+    }
+};
 
-
-// =============================
-// VARIABLES
-// =============================
+const VERB_FORMS = ["infinitive", "past", "participle"];
+const COMPLETE_FORMS = ["past", "participle"];
 
 let selectedGroup = "current";
 let practiceMode = "complete";
-
 let currentVerb;
 let requestedForm;
-
 let correctAnswers = 0;
+let questionAnswered = false;
+let currentLanguage = localStorage.getItem("language") === "en" ? "en" : "es";
+let translations = TRANSLATIONS[currentLanguage];
 
-// =============================
-// DARK / LIGHT MODE
-// =============================
+const elements = {
+    themeToggle: document.getElementById("themeToggle"),
+    languageToggle: document.getElementById("languageToggle"),
+    verbWord: document.getElementById("verbWord"),
+    phonetic: document.getElementById("phonetic"),
+    answer: document.getElementById("answer"),
+    questionText: document.getElementById("questionText"),
+    modeLabel: document.getElementById("modeLabel"),
+    result: document.getElementById("result"),
+    counter: document.getElementById("counter"),
+    formOptions: document.getElementById("formOptions"),
+    checkButton: document.getElementById("checkButton"),
+    nextButton: document.getElementById("nextButton"),
+    verbListSection: document.getElementById("verbListSection"),
+    verbTableBody: document.getElementById("verbTableBody"),
+    verbModal: document.getElementById("verbModal"),
+    modalVerbTitle: document.getElementById("modalVerbTitle"),
+    modalTranslation: document.getElementById("modalTranslation"),
+    modalInfinitive: document.getElementById("modalInfinitive"),
+    modalPast: document.getElementById("modalPast"),
+    modalParticiple: document.getElementById("modalParticiple"),
+    modalIpaInfinitive: document.getElementById("modalIpaInfinitive"),
+    modalIpaPast: document.getElementById("modalIpaPast"),
+    modalIpaParticiple: document.getElementById("modalIpaParticiple"),
+    speakInfinitive: document.getElementById("speakInfinitive"),
+    speakPast: document.getElementById("speakPast"),
+    speakParticiple: document.getElementById("speakParticiple")
+};
 
+const formOptionButtons = [...document.querySelectorAll(".form-option")];
 
-const themeToggle =
-    document.getElementById("themeToggle");
-
-
-// cargar preferencia
-
-const savedTheme =
-    localStorage.getItem("theme");
-
-
-if(savedTheme === "light"){
-
-    document.body.classList.add("light");
-
-    themeToggle.textContent = "🌙";
-
-}
-else{
-
-    themeToggle.textContent = "☀️";
-
-}
-
-
-// cambiar tema
-
-if (themeToggle) {
-
-    themeToggle.addEventListener(
-        "click",
-        function () {
-
-            document.body.classList.toggle("light");
-
-
-            const isLight =
-                document.body.classList.contains("light");
-
-
-            if (isLight) {
-
-                themeToggle.textContent = "🌙";
-
-                localStorage.setItem(
-                    "theme",
-                    "light"
-                );
-
-            }
-
-            else {
-
-                themeToggle.textContent = "☀️";
-
-                localStorage.setItem(
-                    "theme",
-                    "dark"
-                );
-
-            }
-        });
-
-}
-
-//     }
-// );
-
-// =============================
-// ELEMENTOS HTML
-// =============================
-
-const verbWord =
-    document.getElementById("verbWord");
-
-const phonetic =
-    document.getElementById("phonetic");
-
-const answer =
-    document.getElementById("answer");
-
-const questionText =
-    document.getElementById("questionText");
-
-const modeLabel =
-    document.getElementById("modeLabel");
-
-const result =
-    document.getElementById("result");
-
-const counter =
-    document.getElementById("counter");
-
-const verbListSection =
-    document.getElementById("verbListSection");
-
-const verbTableBody =
-    document.getElementById("verbTableBody");
-
-// =============================
-// MODAL VERBO
-// =============================
-
-const verbModal =
-    document.getElementById("verbModal");
-
-const modalVerbTitle =
-    document.getElementById("modalVerbTitle");
-
-const modalTranslation =
-    document.getElementById("modalTranslation");
-
-
-const modalInfinitive =
-    document.getElementById("modalInfinitive");
-
-const modalPast =
-    document.getElementById("modalPast");
-
-const modalParticiple =
-    document.getElementById("modalParticiple");
-
-
-const modalIpaInfinitive =
-    document.getElementById("modalIpaInfinitive");
-
-const modalIpaPast =
-    document.getElementById("modalIpaPast");
-
-const modalIpaParticiple =
-    document.getElementById("modalIpaParticiple");
-
-const formOptions =
-    document.getElementById("formOptions");
-
-const checkButton =
-    document.getElementById("checkButton");
-
-
-// }
-// =============================
-// OBTENER LISTA
-// =============================
-
-function getCurrentList() {
-
-    if (selectedGroup === "all") {
-        return verbs;
+function applyTheme(theme) {
+    const isLight = theme === "light";
+    document.body.classList.toggle("light", isLight);
+    if (elements.themeToggle) {
+        elements.themeToggle.textContent = isLight ? "🌙" : "☀️";
+        elements.themeToggle.setAttribute(
+            "aria-label",
+            t(isLight ? "buttons.darkTheme" : "buttons.lightTheme", "Cambiar tema")
+        );
+        elements.themeToggle.title = elements.themeToggle.getAttribute("aria-label");
     }
+}
 
-    return verbs.filter(
-        verb => verb.group === selectedGroup
+function initializeTheme() {
+    applyTheme(localStorage.getItem("theme") === "light" ? "light" : "dark");
+    elements.themeToggle?.addEventListener("click", () => {
+        const nextTheme = document.body.classList.contains("light") ? "dark" : "light";
+        applyTheme(nextTheme);
+        localStorage.setItem("theme", nextTheme);
+    });
+}
+
+function t(path, fallback = "") {
+    const value = path.split(".").reduce((object, key) => object?.[key], translations);
+    return value ?? fallback;
+}
+
+function applyLanguage() {
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+        element.textContent = t(element.dataset.i18n, element.textContent);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+        element.placeholder = t(element.dataset.i18nPlaceholder, element.placeholder);
+    });
+    document.querySelectorAll("[data-i18n-aria-label]").forEach(element => {
+        element.setAttribute(
+            "aria-label",
+            t(element.dataset.i18nAriaLabel, element.getAttribute("aria-label") || "")
+        );
+    });
+    elements.languageToggle.textContent = currentLanguage === "es" ? "EN" : "ES";
+    elements.languageToggle.setAttribute("aria-label", t("buttons.switchLanguage"));
+    elements.languageToggle.title = t("buttons.switchLanguage");
+    document.documentElement.lang = currentLanguage;
+    applyTheme(document.body.classList.contains("light") ? "light" : "dark");
+    updateCounter();
+}
+
+function formatTranslation(path, replacements = {}) {
+    return Object.entries(replacements).reduce(
+        (text, [key, value]) => text.replaceAll(`{${key}}`, value),
+        t(path)
     );
 }
 
-
-//traer tabla
-function renderVerbTable() {
-
-    verbTableBody.innerHTML = "";
-
-
-    verbs
-        .filter(verb =>
-            verb.group &&
-            verb.infinitive &&
-            verb.past &&
-            verb.participle
-        )
-        .forEach(verb => {
-            const row =
-                document.createElement("tr");
-
-
-            row.innerHTML = `
-
-            <td>
-                ${verb.infinitive}
-
-                <br>
-
-                <small>
-                    ${verb.ipaInfinitive}
-                </small>
-            </td>
-
-
-            <td>
-                ${verb.past}
-
-                <br>
-
-                <small>
-                    ${verb.ipaPast}
-                </small>
-            </td>
-
-
-            <td>
-                ${verb.participle}
-
-                <br>
-
-                <small>
-                    ${verb.ipaParticiple}
-                </small>
-            </td>
-
-
-            <td>
-                ${verb.translation}
-            </td>
-
-        `;
-
-
-            // =============================
-            // CLICK EN EL VERBO
-            // =============================
-
-            row.addEventListener(
-                "click",
-                function () {
-
-                    openVerbModal(verb);
-
-                }
-            );
-
-
-            verbTableBody.appendChild(row);
-
-        });
-}
-// =============================
-// ABRIR DETALLE VERBO
-// =============================
-
-
-function openVerbModal(verb) {
-
-    modalVerbTitle.textContent =
-        verb.infinitive;
-
-    modalTranslation.textContent =
-        verb.translation;
-
-
-    // INFINITIVE
-
-    modalInfinitive.textContent =
-        verb.infinitive;
-
-    modalIpaInfinitive.textContent =
-        verb.ipaInfinitive || "";
-
-
-    // PAST
-
-    modalPast.textContent =
-        verb.past;
-
-    modalIpaPast.textContent =
-        verb.ipaPast || "";
-
-
-    // PARTICIPLE
-
-    modalParticiple.textContent =
-        verb.participle;
-
-    modalIpaParticiple.textContent =
-        verb.ipaParticiple || "";
-
-
-    // =============================
-    // AUDIO
-    // =============================
-
-    document
-        .getElementById("speakInfinitive")
-        .onclick = function () {
-
-            speak(verb.infinitive);
-
-        };
-
-
-    document
-        .getElementById("speakPast")
-        .onclick = function () {
-
-            speak(verb.past);
-
-        };
-
-
-    document
-        .getElementById("speakParticiple")
-        .onclick = function () {
-
-            speak(verb.participle);
-
-        };
-
-
-    // MOSTRAR
-
-    verbModal.classList.remove("hidden");
+function updateCounter() {
+    const key = correctAnswers === 1 ? "counter.one" : "counter.many";
+    elements.counter.textContent = formatTranslation(key, { count: correctAnswers });
 }
 
-// =============================
-// COMPROBAR RESPUESTA
-// =============================
-
-function checkAnswer() {
-
-    const userAnswer =
-        answer.value.trim().toLowerCase();
-
-    if (userAnswer === "") {
-        return;
-    }
-
-
-    let correctAnswer;
-
-
-    // =============================
-    // COMPLETAR
-    // =============================
-
-    if (practiceMode === "complete") {
-
-        correctAnswer =
-            currentVerb[requestedForm]
-                .toLowerCase();
-
-
-        // caso especial: be -> was / were
-
-        const possibleAnswers =
-            correctAnswer
-                .split("/")
-                .map(item =>
-                    item.trim()
-                );
-
-
-        if (
-            possibleAnswers.includes(userAnswer)
-        ) {
-
-            showCorrect(
-                currentVerb[requestedForm]
-            );
-
-            return;
-        }
-
-
-        showIncorrect(
-            currentVerb[requestedForm]
-        );
-
-        return;
-    }
-
-
-
-    // =============================
-    // IDENTIFICAR
-    // =============================
-
-    if (practiceMode === "identify") {
-
-        const selectedForm =
-            normalizeIdentifyAnswer(userAnswer);
-
-
-        // No reconocemos lo que escribió
-        if (!selectedForm) {
-
-            result.className =
-                "result incorrect";
-
-            result.innerHTML = `
-            ❌ Escribe:
-            <br>
-            <strong>
-                infinitive, simple o participle
-            </strong>
-        `;
-
-            return;
-        }
-
-
-        // Obtener TODAS las formas válidas
-        // según palabra + pronunciación
-
-        const validForms =
-            getValidForms();
-
-
-        const isCorrect =
-            validForms.includes(selectedForm);
-
-
-        const validNames =
-            validForms
-                .map(getFormName)
-                .join(" · ");
-
-
-        // =============================
-        // CORRECTO
-        // =============================
-
-        if (isCorrect) {
-
-            result.className =
-                "result correct";
-
-
-            if (validForms.length === 1) {
-
-                result.innerHTML = `
-                ✅ Correcto
-                <br>
-
-                <strong>
-                    ${getFormName(selectedForm)}
-                </strong>
-            `;
-
-            }
-
-            else {
-
-                result.innerHTML = `
-
-                ✅ Correcto
-
-                <br>
-
-                <small>
-                    Esta palabra puede ser:
-                </small>
-
-                <br>
-
-                <strong>
-                    ${validNames}
-                </strong>
-
-            `;
-            }
-
-
-            correctAnswers++;
-
-
-            counter.textContent =
-                `${correctAnswers} correctas`;
-
-            return;
-        }
-
-
-        // =============================
-        // INCORRECTO
-        // =============================
-
-        result.className =
-            "result incorrect";
-
-
-        result.innerHTML = `
-
-        ❌ Incorrecto
-
-        <br>
-
-        <small>
-            ${validForms.length > 1
-                ? "Formas válidas:"
-                : "Forma válida:"}
-        </small>
-
-        <br>
-
-        <strong>
-            ${validNames}
-        </strong>
-
-    `;
-
-        return;
-    }
-}
-function showIncorrect(correctAnswer) {
-
-    const answerIPA =
-        getAnswerIPA();
-
-
-    let wordToSpeak;
-
-
-    if (practiceMode === "identify") {
-
-        wordToSpeak =
-            currentVerb[requestedForm];
-
-    } else {
-
-        wordToSpeak =
-            correctAnswer;
-    }
-
-
-    result.className =
-        "result incorrect";
-
-
-    result.innerHTML = `
-
-        <div>
-            ❌ Incorrecto
-        </div>
-
-        <div class="correct-answer">
-            ${correctAnswer}
-        </div>
-
-        <div class="answer-phonetic">
-            ${answerIPA}
-        </div>
-
-        <button
-            class="answer-audio"
-            onclick="speak('${wordToSpeak}')"
-        >
-            🔊 Escuchar respuesta
-        </button>
-
-    `;
-}
-/// text speech
-function speak(text) {
-
-    if (!("speechSynthesis" in window)) {
-
-        alert(
-            "Tu navegador no soporta pronunciación por voz."
-        );
-
-        return;
-    }
-
-
-    /* detener pronunciación anterior */
-
-    window.speechSynthesis.cancel();
-
-
-    const speech =
-        new SpeechSynthesisUtterance(text);
-
-
-    speech.lang = "en-US";
-
-    speech.rate = 0.8; //velocidad de la voz
-
-    speech.pitch = 1;
-
-
-    window.speechSynthesis.speak(speech);
+function addCorrectAnswer() {
+    correctAnswers += 1;
+    updateCounter();
 }
 
-// =============================
-// CORRECTO
-// =============================
-
-function showCorrect(correctAnswer) {
-
-    result.className = "result correct";
-
-    let wordToSpeak;
-    let answerIPA;
-
-
-    if (practiceMode === "identify") {
-
-        wordToSpeak =
-            currentVerb[requestedForm];
-
-        answerIPA =
-            getAnswerIPA();
-
-    }
-
-    else {
-
-        wordToSpeak =
-            correctAnswer;
-
-        answerIPA =
-            getAnswerIPA();
-
-    }
-
-
-    result.innerHTML = `
-
-        <div>
-            ✅ Correcto
-        </div>
-
-        <div class="correct-answer">
-            ${wordToSpeak}
-        </div>
-
-        <div class="answer-phonetic">
-            ${answerIPA}
-        </div>
-
-        <button
-            class="answer-audio"
-            onclick="speak('${wordToSpeak}')"
-        >
-            🔊 Escuchar
-        </button>
-
-    `;
-
-
-    correctAnswers++;
-
-
-    counter.textContent =
-        `${correctAnswers} correctas`;
+function getCurrentList() {
+    return selectedGroup === "all"
+        ? verbs
+        : verbs.filter(verb => verb.group === selectedGroup);
 }
 
-function getAnswerIPA() {
-
-    if (requestedForm === "past") {
-        return currentVerb.ipaPast || "";
-    }
-
-    if (requestedForm === "participle") {
-        return currentVerb.ipaParticiple || "";
-    }
-
-    if (requestedForm === "infinitive") {
-        return currentVerb.ipaInfinitive || "";
-    }
-
-    return "";
+function randomItem(items) {
+    return items[Math.floor(Math.random() * items.length)];
 }
 
-function newQuestion() {
-
-    // =============================
-    // LIMPIAR ESTADO ANTERIOR
-    // =============================
-
-    result.innerHTML = "";
-    result.className = "result";
-
-    answer.value = "";
-
-    const list = getCurrentList();
-
-    if (!list || list.length === 0) {
-        result.className = "result incorrect";
-        result.innerHTML = "No hay verbos disponibles en este grupo.";
-        return;
-    }
-
-
-    // =============================
-    // SELECCIONAR VERBO ALEATORIO
-    // =============================
-
-    currentVerb =
-        list[
-        Math.floor(
-            Math.random() * list.length
-        )
-        ];
-
-
-    // =============================
-    // MODO COMPLETAR
-    // =============================
-
-    if (practiceMode === "complete") {
-
-        answer.classList.remove("hidden");
-        checkButton.classList.remove("hidden");
-        formOptions.classList.add("hidden");
-
-        const options = [
-            "past",
-            "participle"
-        ];
-
-
-        requestedForm =
-            options[
-            Math.floor(
-                Math.random() * options.length
-            )
-            ];
-
-
-        // Siempre mostramos el infinitivo
-        verbWord.textContent =
-            currentVerb.infinitive;
-
-
-        phonetic.textContent =
-            currentVerb.ipaInfinitive || "";
-
-
-        if (requestedForm === "past") {
-
-            questionText.textContent =
-                "Escribe el Past Simple de:";
-
-            modeLabel.textContent =
-                "PAST SIMPLE";
-
-        }
-
-        else {
-
-            questionText.textContent =
-                "Escribe el Past Participle de:";
-
-            modeLabel.textContent =
-                "PAST PARTICIPLE";
-        }
-
-
-        answer.focus();
-
-        return;
-    }
-
-
-    // =============================
-    // MODO IDENTIFICAR ESCRIBIENDO
-    // =============================
-
-    if (practiceMode === "identify") {
-
-        answer.classList.remove("hidden");
-        checkButton.classList.remove("hidden");
-        formOptions.classList.add("hidden");
-
-
-        const forms = [
-            "infinitive",
-            "past",
-            "participle"
-        ];
-
-
-        requestedForm =
-            forms[
-            Math.floor(
-                Math.random() * forms.length
-            )
-            ];
-
-
-        // Mostrar la forma seleccionada
-        verbWord.textContent =
-            currentVerb[requestedForm];
-
-
-        // Mostrar IPA correspondiente
-        phonetic.textContent =
-            getCurrentIPA();
-
-
-        questionText.textContent =
-            "¿Qué forma verbal es?";
-
-
-        modeLabel.textContent =
-            "IDENTIFICAR";
-
-
-        answer.focus();
-
-        return;
-    }
-
-
-    // =============================
-    // MODO SELECCIONAR FORMA
-    // =============================
-
-    if (practiceMode === "select") {
-
-        // No necesitamos escribir
-        answer.classList.add("hidden");
-        checkButton.classList.add("hidden");
-
-        // Mostrar las tres opciones
-        formOptions.classList.remove("hidden");
-
-
-        const forms = [
-            "infinitive",
-            "past",
-            "participle"
-        ];
-
-
-        requestedForm =
-            forms[
-            Math.floor(
-                Math.random() * forms.length
-            )
-            ];
-
-
-        // Mostrar la palabra correspondiente
-        verbWord.textContent =
-            currentVerb[requestedForm];
-
-
-        // IMPORTANTE:
-        // esto permite distinguir casos como:
-        // read /riːd/ vs read /rɛd/
-        phonetic.textContent =
-            getCurrentIPA();
-
-
-        questionText.textContent =
-            "Selecciona qué forma verbal es:";
-
-
-        modeLabel.textContent =
-            "SELECCIONAR FORMA";
-
-
-        // =============================
-        // REINICIAR BOTONES
-        // =============================
-
-        document
-            .querySelectorAll(".form-option")
-            .forEach(button => {
-
-                button.classList.remove(
-                    "correct-option",
-                    "wrong-option"
-                );
-
-                button.disabled = false;
-
-            });
-
-
-        return;
-    }
-}
 function getIPAByForm(verb, form) {
+    const ipaProperties = {
+        infinitive: "ipaInfinitive",
+        past: "ipaPast",
+        participle: "ipaParticiple"
+    };
+    return verb?.[ipaProperties[form]] || "";
+}
 
-    if (form === "infinitive") {
-        return verb.ipaInfinitive || "";
-    }
-
-    if (form === "past") {
-        return verb.ipaPast || "";
-    }
-
-    if (form === "participle") {
-        return verb.ipaParticiple || "";
-    }
-
-    return "";
+function getFormName(form) {
+    return t(`forms.${form}`, form);
 }
 
 function getValidForms() {
-
-    const forms = [
-        "infinitive",
-        "past",
-        "participle"
-    ];
-
-    const shownWord =
-        currentVerb[requestedForm]
-            .trim()
-            .toLowerCase();
-
-    const shownIPA =
-        getIPAByForm(
-            currentVerb,
-            requestedForm
-        );
-
-
-    return forms.filter(form => {
-
-        const sameWord =
-            currentVerb[form]
-                .trim()
-                .toLowerCase()
-            === shownWord;
-
-        const sameIPA =
-            getIPAByForm(
-                currentVerb,
-                form
-            )
-            === shownIPA;
-
-        return sameWord && sameIPA;
-    });
+    const shownWord = currentVerb[requestedForm].trim().toLowerCase();
+    const shownIPA = getIPAByForm(currentVerb, requestedForm);
+    return VERB_FORMS.filter(form => (
+        currentVerb[form].trim().toLowerCase() === shownWord
+        && getIPAByForm(currentVerb, form) === shownIPA
+    ));
 }
-
-function getCurrentIPA() {
-
-    if (requestedForm === "infinitive") {
-        return currentVerb.ipaInfinitive || "";
-    }
-
-    if (requestedForm === "past") {
-        return currentVerb.ipaPast || "";
-    }
-
-    if (requestedForm === "participle") {
-        return currentVerb.ipaParticiple || "";
-    }
-
-    return "";
-}
-
-
-
-// =============================
-// NOMBRE VISIBLE DE LA FORMA
-// =============================
-
-function getFormName(form) {
-
-    if (form === "infinitive") {
-        return "Infinitive";
-    }
-
-    if (form === "past") {
-        return "Past Simple";
-    }
-
-    if (form === "participle") {
-        return "Past Participle";
-    }
-
-    return form;
-}
-
 
 function normalizeIdentifyAnswer(userAnswer) {
-
-    const value =
-        userAnswer.trim().toLowerCase();
-
-
-    if (
-        value === "past" ||
-        value === "past simple" ||
-        value === "simple"
-    ) {
-        return "past";
-    }
-
-
-    if (
-        value === "participle" ||
-        value === "past participle" ||
-        value === "participio"
-    ) {
-        return "participle";
-    }
-
-
-    if (
-        value === "infinitive" ||
-        value === "infinitivo"
-    ) {
-        return "infinitive";
-    }
-
-
-    return null;
+    const aliases = {
+        past: "past",
+        "past simple": "past",
+        simple: "past",
+        participle: "participle",
+        "past participle": "participle",
+        participio: "participle",
+        infinitive: "infinitive",
+        infinitivo: "infinitive"
+    };
+    return aliases[userAnswer.trim().toLowerCase()] || null;
 }
-function activateModeButton(selectedButton) {
 
-    document
-        .querySelectorAll(".mode-btn")
-        .forEach(button =>
-            button.classList.remove("active")
-        );
-
-
-    selectedButton.classList.add("active");
-
-}
-// =============================
-// BOTONES
-// =============================
-
-document
-    .getElementById("checkButton")
-    .addEventListener("click", checkAnswer);
-
-
-document
-    .getElementById("nextButton")
-    .addEventListener("click", newQuestion);
-
-document
-    .getElementById("speakQuestion")
-    .addEventListener("click", function () {
-
-        speak(
-            verbWord.textContent.trim()
-        );
-
-    });
-
-// ENTER
-
-
-//tabla 
-document
-    .getElementById("showVerbList")
-    .addEventListener("click", function () {
-
-        renderVerbTable();
-
-        verbListSection.classList.remove("hidden");
-
-    });
-
-// =============================
-// CERRAR MODAL
-// =============================
-
-document
-    .getElementById("closeVerbModal")
-    .addEventListener("click", function () {
-
-        verbModal.classList.add("hidden");
-
-    });
-verbModal.addEventListener(
-    "click",
-    function (event) {
-
-        if (event.target === verbModal) {
-
-            verbModal.classList.add("hidden");
-
-        }
-
-    }
-);
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (event.key === "Escape") {
-
-            verbModal.classList.add("hidden");
-
-        }
-
-    }
-);
-document
-    .getElementById("closeVerbList")
-    .addEventListener("click", function () {
-
-        verbListSection.classList.add("hidden");
-
-    });
-
-
-answer.addEventListener("keydown", function (event) {
-
-    if (event.key === "Enter") {
-        checkAnswer();
-    }
-
-});
-
-
-// GRUPOS
-
-document
-    .querySelectorAll(".group-btn")
-    .forEach(button => {
-
-        button.addEventListener("click", function () {
-
-            document
-                .querySelectorAll(".group-btn")
-                .forEach(btn =>
-                    btn.classList.remove("active")
-                );
-
-
-            this.classList.add("active");
-
-            selectedGroup =
-                this.dataset.group;
-
-            newQuestion();
+function setQuestionLocked(isLocked) {
+    questionAnswered = isLocked;
+    elements.answer.disabled = isLocked;
+    elements.checkButton.disabled = isLocked;
+    if (practiceMode === "select") {
+        formOptionButtons.forEach(button => {
+            button.disabled = isLocked;
         });
+    }
+}
 
+function resetQuestionUI() {
+    elements.result.replaceChildren();
+    elements.result.className = "result";
+    elements.answer.value = "";
+    elements.answer.disabled = false;
+    elements.checkButton.disabled = false;
+    questionAnswered = false;
+    formOptionButtons.forEach(button => {
+        button.disabled = false;
+        button.classList.remove("correct-option", "wrong-option");
     });
+}
 
+function showAnswerFeedback(isCorrect, word, ipa) {
+    elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
+    elements.result.innerHTML = `
+        <div>${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}</div>
+        <div class="correct-answer"></div>
+        <div class="answer-phonetic"></div>
+        <button class="answer-audio" type="button"></button>
+    `;
+    elements.result.querySelector(".correct-answer").textContent = word;
+    elements.result.querySelector(".answer-phonetic").textContent = ipa;
+    const audioButton = elements.result.querySelector(".answer-audio");
+    audioButton.textContent = `🔊 ${t(isCorrect ? "buttons.listen" : "buttons.listenAnswer")}`;
+    audioButton.addEventListener("click", () => speak(word));
+}
 
-// MODOS
+function showFormFeedback(isCorrect, validForms, selectedForm = null) {
+    const validNames = validForms.map(getFormName).join(" · ");
+    const hasSeveralForms = validForms.length > 1;
+    let explanation = "";
+    if (isCorrect && hasSeveralForms) {
+        explanation = t("results.wordCanBe");
+    } else if (!isCorrect) {
+        explanation = t(hasSeveralForms ? "results.validForms" : "results.validForm");
+    }
+    elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
+    elements.result.innerHTML = `
+        ${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}
+        ${explanation ? `<br><small>${explanation}</small><br><strong></strong>` : ""}
+    `;
+    const strong = elements.result.querySelector("strong");
+    if (strong) {
+        strong.textContent = validNames;
+    } else if (isCorrect && selectedForm) {
+        const detail = document.createElement("strong");
+        detail.textContent = getFormName(selectedForm);
+        elements.result.append(document.createElement("br"), detail);
+    }
+}
 
-document
-    .getElementById("completeMode")
-    .addEventListener("click", function () {
+function checkAnswer() {
+    if (questionAnswered) {
+        return;
+    }
+    const userAnswer = elements.answer.value.trim().toLowerCase();
+    if (!userAnswer) {
+        return;
+    }
+    if (practiceMode === "complete") {
+        const correctAnswer = currentVerb[requestedForm];
+        const possibleAnswers = correctAnswer.toLowerCase().split("/").map(item => item.trim());
+        const isCorrect = possibleAnswers.includes(userAnswer);
+        setQuestionLocked(true);
+        showAnswerFeedback(isCorrect, correctAnswer, getIPAByForm(currentVerb, requestedForm));
+        if (isCorrect) {
+            addCorrectAnswer();
+        }
+        return;
+    }
+    if (practiceMode === "identify") {
+        const selectedForm = normalizeIdentifyAnswer(userAnswer);
+        if (!selectedForm) {
+            elements.result.className = "result incorrect";
+            elements.result.innerHTML = `❌ ${t("results.writeHint")}<br><strong>infinitive, simple, participle</strong>`;
+            return;
+        }
+        const validForms = getValidForms();
+        const isCorrect = validForms.includes(selectedForm);
+        setQuestionLocked(true);
+        showFormFeedback(isCorrect, validForms, selectedForm);
+        if (isCorrect) {
+            addCorrectAnswer();
+        }
+    }
+}
 
-        practiceMode = "complete";
+function configureWrittenMode() {
+    elements.answer.classList.remove("hidden");
+    elements.checkButton.classList.remove("hidden");
+    elements.formOptions.classList.add("hidden");
+}
 
-        activateModeButton(this);
+function configureFormQuestion() {
+    requestedForm = randomItem(VERB_FORMS);
+    elements.verbWord.textContent = currentVerb[requestedForm];
+    elements.phonetic.textContent = getIPAByForm(currentVerb, requestedForm);
+}
 
+function newQuestion() {
+    resetQuestionUI();
+    const list = getCurrentList();
+    if (!list.length) {
+        elements.result.className = "result incorrect";
+        elements.result.textContent = t("results.noVerbs");
+        return;
+    }
+    currentVerb = randomItem(list);
+    if (practiceMode === "complete") {
+        configureWrittenMode();
+        requestedForm = randomItem(COMPLETE_FORMS);
+        elements.verbWord.textContent = currentVerb.infinitive;
+        elements.phonetic.textContent = currentVerb.ipaInfinitive || "";
+        elements.questionText.textContent = t(`questions.${requestedForm === "past" ? "writePast" : "writeParticiple"}`);
+        elements.modeLabel.textContent = getFormName(requestedForm).toUpperCase();
+        elements.answer.focus();
+        return;
+    }
+    configureFormQuestion();
+    if (practiceMode === "identify") {
+        configureWrittenMode();
+        elements.questionText.textContent = t("questions.identify");
+        elements.modeLabel.textContent = t("practice.identify").toUpperCase();
+        elements.answer.focus();
+        return;
+    }
+    elements.answer.classList.add("hidden");
+    elements.checkButton.classList.add("hidden");
+    elements.formOptions.classList.remove("hidden");
+    elements.questionText.textContent = t("questions.select");
+    elements.modeLabel.textContent = t("practice.select").toUpperCase();
+}
+
+function renderVerbTable() {
+    elements.verbTableBody.replaceChildren();
+    verbs.forEach(verb => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${verb.infinitive}<br><small>${verb.ipaInfinitive || ""}</small></td>
+            <td>${verb.past}<br><small>${verb.ipaPast || ""}</small></td>
+            <td>${verb.participle}<br><small>${verb.ipaParticiple || ""}</small></td>
+            <td>${verb.translation}</td>
+        `;
+        row.addEventListener("click", () => openVerbModal(verb));
+        elements.verbTableBody.appendChild(row);
+    });
+}
+
+function openVerbModal(verb) {
+    const modalForms = [
+        ["infinitive", elements.modalInfinitive, elements.modalIpaInfinitive, elements.speakInfinitive],
+        ["past", elements.modalPast, elements.modalIpaPast, elements.speakPast],
+        ["participle", elements.modalParticiple, elements.modalIpaParticiple, elements.speakParticiple]
+    ];
+    elements.modalVerbTitle.textContent = verb.infinitive;
+    elements.modalTranslation.textContent = verb.translation;
+    modalForms.forEach(([form, wordElement, ipaElement, audioButton]) => {
+        wordElement.textContent = verb[form];
+        ipaElement.textContent = getIPAByForm(verb, form);
+        audioButton.onclick = () => speak(verb[form]);
+    });
+    elements.verbModal.classList.remove("hidden");
+}
+
+function closeVerbModal() {
+    elements.verbModal.classList.add("hidden");
+}
+
+function speak(text) {
+    if (!("speechSynthesis" in window)) {
+        alert(t("errors.speechUnsupported"));
+        return;
+    }
+    window.speechSynthesis.cancel();
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+    speech.rate = 0.8;
+    speech.pitch = 1;
+    window.speechSynthesis.speak(speech);
+}
+
+function selectPracticeMode(button) {
+    document.querySelectorAll(".mode-btn").forEach(item => {
+        item.classList.toggle("active", item === button);
+    });
+    practiceMode = button.dataset.mode;
+    newQuestion();
+}
+
+function selectGroup(button) {
+    document.querySelectorAll(".group-btn").forEach(item => {
+        item.classList.toggle("active", item === button);
+    });
+    selectedGroup = button.dataset.group;
+    newQuestion();
+}
+
+function selectForm(button) {
+    if (questionAnswered) {
+        return;
+    }
+    const validForms = getValidForms();
+    const isCorrect = validForms.includes(button.dataset.form);
+    setQuestionLocked(true);
+    validForms.forEach(form => {
+        document.querySelector(`.form-option[data-form="${form}"]`)?.classList.add("correct-option");
+    });
+    if (!isCorrect) {
+        button.classList.add("wrong-option");
+    }
+    showFormFeedback(isCorrect, validForms, button.dataset.form);
+    if (isCorrect) {
+        addCorrectAnswer();
+    }
+}
+
+function bindEvents() {
+    elements.checkButton.addEventListener("click", checkAnswer);
+    elements.nextButton.addEventListener("click", newQuestion);
+    document.getElementById("speakQuestion").addEventListener("click", () => {
+        speak(elements.verbWord.textContent.trim());
+    });
+    elements.answer.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+    document.querySelectorAll(".mode-btn").forEach(button => {
+        button.addEventListener("click", () => selectPracticeMode(button));
+    });
+    document.querySelectorAll(".group-btn").forEach(button => {
+        button.addEventListener("click", () => selectGroup(button));
+    });
+    formOptionButtons.forEach(button => {
+        button.addEventListener("click", () => selectForm(button));
+    });
+    document.getElementById("showVerbList").addEventListener("click", () => {
+        renderVerbTable();
+        elements.verbListSection.classList.remove("hidden");
+    });
+    document.getElementById("closeVerbList").addEventListener("click", () => {
+        elements.verbListSection.classList.add("hidden");
+    });
+    document.getElementById("closeVerbModal").addEventListener("click", closeVerbModal);
+    elements.verbModal.addEventListener("click", event => {
+        if (event.target === elements.verbModal) {
+            closeVerbModal();
+        }
+    });
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeVerbModal();
+        }
+    });
+    elements.languageToggle.addEventListener("click", () => {
+        currentLanguage = currentLanguage === "es" ? "en" : "es";
+        translations = TRANSLATIONS[currentLanguage];
+        localStorage.setItem("language", currentLanguage);
+        applyLanguage();
         newQuestion();
     });
-
-document
-    .getElementById("identifyMode")
-    .addEventListener("click", function () {
-
-        practiceMode = "identify";
-
-        activateModeButton(this);
-
-        newQuestion();
-    });
-document
-    .getElementById("selectMode")
-    .addEventListener("click", function () {
-
-        practiceMode = "select";
-
-       activateModeButton(this);
-
-        newQuestion();
-    });
-
-// =============================
-// SELECCIONAR FORMA
-// =============================
-
-document
-    .querySelectorAll(".form-option")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const selectedForm =
-                    this.dataset.form;
-
-
-                // Todas las formas que pueden
-                // representar la palabra mostrada
-
-                const validForms =
-                    getValidForms();
-
-
-                const isCorrect =
-                    validForms.includes(
-                        selectedForm
-                    );
-
-
-                // =============================
-                // DESACTIVAR BOTONES
-                // =============================
-
-                document
-                    .querySelectorAll(".form-option")
-                    .forEach(option => {
-
-                        option.disabled = true;
-
-                    });
-
-
-                // =============================
-                // MARCAR TODAS LAS VÁLIDAS
-                // =============================
-
-                validForms.forEach(form => {
-
-                    const validButton =
-                        document.querySelector(
-                            `.form-option[data-form="${form}"]`
-                        );
-
-
-                    if (validButton) {
-
-                        validButton.classList.add(
-                            "correct-option"
-                        );
-
-                    }
-
-                });
-
-
-                // =============================
-                // RESPUESTA CORRECTA
-                // =============================
-
-                if (isCorrect) {
-
-                    result.className =
-                        "result correct";
-
-
-                    if (validForms.length === 1) {
-
-                        result.innerHTML = `
-                            ✅ Correcto
-                        `;
-
-                    }
-
-                    else {
-
-                        const validNames =
-                            validForms
-                                .map(getFormName)
-                                .join(" · ");
-
-
-                        result.innerHTML = `
-
-                            ✅ Correcto
-
-                            <br>
-
-                            <small>
-                                Esta forma también puede ser:
-                            </small>
-
-                            <br>
-
-                            <strong>
-                                ${validNames}
-                            </strong>
-
-                        `;
-
-                    }
-
-
-                    correctAnswers++;
-
-
-                    counter.textContent =
-                        `${correctAnswers} correctas`;
-
-                }
-
-
-                // =============================
-                // RESPUESTA INCORRECTA
-                // =============================
-
-                else {
-
-                    this.classList.add(
-                        "wrong-option"
-                    );
-
-
-                    const validNames =
-                        validForms
-                            .map(getFormName)
-                            .join(" · ");
-
-
-                    result.className =
-                        "result incorrect";
-
-
-                    result.innerHTML = `
-
-                        ❌ Incorrecto
-
-                        <br>
-
-                        <small>
-                            Respuesta${validForms.length > 1 ? "s" : ""} válida${validForms.length > 1 ? "s" : ""}:
-                        </small>
-
-                        <br>
-
-                        <strong>
-                            ${validNames}
-                        </strong>
-
-                    `;
-
-                }
-
-            }
-        );
-
-    });
-// =============================
-// INICIAR APP
-// =============================
-
-// startApp();
-newQuestion();
+}
+
+function startApp() {
+    initializeTheme();
+    bindEvents();
+    applyLanguage();
+    newQuestion();
+}
+
+startApp();
