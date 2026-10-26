@@ -445,16 +445,17 @@ const verbs = [
     },
 
 
-    {
-        "group": "future",
-        "infinitive": "learn",
-        "past": "learned",
-        "participle": "learned",
-        "translation": "aprender",
-        "ipaInfinitive": "/lɝn/",
-        "ipaPast": "/lɝnd/",
-        "ipaParticiple": "/lɝnd/"
-    },
+    // {
+    //     "group": "future",
+    //     "infinitive": "learn",
+    //     "past": "learnt / learned",
+    //     "participle": "learnt / learned",
+    //     "translation": "aprender",
+    //     "ipaInfinitive": "/lɜːn/",
+    //     "ipaPast": "/lɜːnt/ /lɜːnd/",
+    //     "ipaParticiple": "/lɜːnt/ /lɜːnd/"
+    // },
+
 
 
     {

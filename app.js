@@ -11,6 +11,7 @@ const TRANSLATIONS = {
             close: "Cerrar",
             listen: "Escuchar",
             listenAnswer: "Escuchar respuesta",
+            listenPronunciation: "Escuchar pronunciación",
             switchLanguage: "Cambiar a inglés",
             lightTheme: "Activar tema claro",
             darkTheme: "Activar tema oscuro"
@@ -73,6 +74,7 @@ const TRANSLATIONS = {
             close: "Close",
             listen: "Listen",
             listenAnswer: "Listen to answer",
+            listenPronunciation: "Listen to pronunciation",
             switchLanguage: "Switch to Spanish",
             lightTheme: "Use light theme",
             darkTheme: "Use dark theme"
@@ -131,11 +133,13 @@ const COMPLETE_FORMS = ["past", "participle"];
 let selectedGroup = "current";
 let practiceMode = "complete";
 let currentVerb;
+let previousVerb;
 let requestedForm;
 let correctAnswers = 0;
 let questionAnswered = false;
 let currentLanguage = localStorage.getItem("language") === "en" ? "en" : "es";
 let translations = TRANSLATIONS[currentLanguage];
+let lastFocusedElement = null;
 
 const elements = {
     themeToggle: document.getElementById("themeToggle"),
@@ -150,6 +154,9 @@ const elements = {
     formOptions: document.getElementById("formOptions"),
     checkButton: document.getElementById("checkButton"),
     nextButton: document.getElementById("nextButton"),
+    showVerbList: document.getElementById("showVerbList"),
+    closeVerbList: document.getElementById("closeVerbList"),
+    closeVerbModal: document.getElementById("closeVerbModal"),
     verbListSection: document.getElementById("verbListSection"),
     verbTableBody: document.getElementById("verbTableBody"),
     verbModal: document.getElementById("verbModal"),
@@ -214,6 +221,9 @@ function applyLanguage() {
     document.documentElement.lang = currentLanguage;
     applyTheme(document.body.classList.contains("light") ? "light" : "dark");
     updateCounter();
+    if (elements.verbTableBody.childElementCount) {
+        renderVerbTable();
+    }
 }
 
 function formatTranslation(path, replacements = {}) {
@@ -241,6 +251,13 @@ function getCurrentList() {
 
 function randomItem(items) {
     return items[Math.floor(Math.random() * items.length)];
+}
+
+function randomVerb(items) {
+    const available = items.length > 1
+        ? items.filter(verb => verb !== previousVerb)
+        : items;
+    return randomItem(available);
 }
 
 function getIPAByForm(verb, form) {
@@ -303,19 +320,32 @@ function resetQuestionUI() {
     });
 }
 
+function createElement(tagName, className = "", text = "") {
+    const element = document.createElement(tagName);
+    if (className) {
+        element.className = className;
+    }
+    element.textContent = text;
+    return element;
+}
+
 function showAnswerFeedback(isCorrect, word, ipa) {
     elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
-    elements.result.innerHTML = `
-        <div>${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}</div>
-        <div class="correct-answer"></div>
-        <div class="answer-phonetic"></div>
-        <button class="answer-audio" type="button"></button>
-    `;
-    elements.result.querySelector(".correct-answer").textContent = word;
-    elements.result.querySelector(".answer-phonetic").textContent = ipa;
-    const audioButton = elements.result.querySelector(".answer-audio");
-    audioButton.textContent = `🔊 ${t(isCorrect ? "buttons.listen" : "buttons.listenAnswer")}`;
+    const status = createElement(
+        "div",
+        "",
+        `${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}`
+    );
+    const answerWord = createElement("div", "correct-answer", word);
+    const answerPhonetic = createElement("div", "answer-phonetic", ipa);
+    const audioButton = createElement(
+        "button",
+        "answer-audio",
+        `🔊 ${t(isCorrect ? "buttons.listen" : "buttons.listenAnswer")}`
+    );
+    audioButton.type = "button";
     audioButton.addEventListener("click", () => speak(word));
+    elements.result.replaceChildren(status, answerWord, answerPhonetic, audioButton);
 }
 
 function showFormFeedback(isCorrect, validForms, selectedForm = null) {
@@ -328,18 +358,33 @@ function showFormFeedback(isCorrect, validForms, selectedForm = null) {
         explanation = t(hasSeveralForms ? "results.validForms" : "results.validForm");
     }
     elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
-    elements.result.innerHTML = `
-        ${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}
-        ${explanation ? `<br><small>${explanation}</small><br><strong></strong>` : ""}
-    `;
-    const strong = elements.result.querySelector("strong");
-    if (strong) {
-        strong.textContent = validNames;
+    elements.result.replaceChildren(
+        document.createTextNode(
+            `${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}`
+        )
+    );
+    if (explanation) {
+        elements.result.append(
+            document.createElement("br"),
+            createElement("small", "", explanation),
+            document.createElement("br"),
+            createElement("strong", "", validNames)
+        );
     } else if (isCorrect && selectedForm) {
-        const detail = document.createElement("strong");
-        detail.textContent = getFormName(selectedForm);
-        elements.result.append(document.createElement("br"), detail);
+        elements.result.append(
+            document.createElement("br"),
+            createElement("strong", "", getFormName(selectedForm))
+        );
     }
+}
+
+function showIdentifyHint() {
+    elements.result.className = "result incorrect";
+    elements.result.replaceChildren(
+        document.createTextNode(`❌ ${t("results.writeHint")}`),
+        document.createElement("br"),
+        createElement("strong", "", "infinitive, simple, participle")
+    );
 }
 
 function checkAnswer() {
@@ -359,13 +404,13 @@ function checkAnswer() {
         if (isCorrect) {
             addCorrectAnswer();
         }
+        elements.nextButton.focus();
         return;
     }
     if (practiceMode === "identify") {
         const selectedForm = normalizeIdentifyAnswer(userAnswer);
         if (!selectedForm) {
-            elements.result.className = "result incorrect";
-            elements.result.innerHTML = `❌ ${t("results.writeHint")}<br><strong>infinitive, simple, participle</strong>`;
+            showIdentifyHint();
             return;
         }
         const validForms = getValidForms();
@@ -375,6 +420,7 @@ function checkAnswer() {
         if (isCorrect) {
             addCorrectAnswer();
         }
+        elements.nextButton.focus();
     }
 }
 
@@ -398,7 +444,8 @@ function newQuestion() {
         elements.result.textContent = t("results.noVerbs");
         return;
     }
-    currentVerb = randomItem(list);
+    currentVerb = randomVerb(list);
+    previousVerb = currentVerb;
     if (practiceMode === "complete") {
         configureWrittenMode();
         requestedForm = randomItem(COMPLETE_FORMS);
@@ -428,13 +475,34 @@ function renderVerbTable() {
     elements.verbTableBody.replaceChildren();
     verbs.forEach(verb => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${verb.infinitive}<br><small>${verb.ipaInfinitive || ""}</small></td>
-            <td>${verb.past}<br><small>${verb.ipaPast || ""}</small></td>
-            <td>${verb.participle}<br><small>${verb.ipaParticiple || ""}</small></td>
-            <td>${verb.translation}</td>
-        `;
+        row.tabIndex = 0;
+        row.setAttribute("aria-haspopup", "dialog");
+        row.setAttribute("aria-label", `${verb.infinitive}: ${verb.past}, ${verb.participle}`);
+
+        VERB_FORMS.forEach(form => {
+            const cell = document.createElement("td");
+            cell.dataset.label = getFormName(form);
+            const value = createElement("div", "table-value");
+            value.append(
+                document.createTextNode(verb[form]),
+                document.createElement("br"),
+                createElement("small", "", getIPAByForm(verb, form))
+            );
+            cell.appendChild(value);
+            row.appendChild(cell);
+        });
+
+        const translationCell = document.createElement("td");
+        translationCell.dataset.label = t("list.translation");
+        translationCell.appendChild(createElement("div", "table-value", verb.translation));
+        row.appendChild(translationCell);
         row.addEventListener("click", () => openVerbModal(verb));
+        row.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openVerbModal(verb);
+            }
+        });
         elements.verbTableBody.appendChild(row);
     });
 }
@@ -447,16 +515,49 @@ function openVerbModal(verb) {
     ];
     elements.modalVerbTitle.textContent = verb.infinitive;
     elements.modalTranslation.textContent = verb.translation;
+    lastFocusedElement = document.activeElement;
     modalForms.forEach(([form, wordElement, ipaElement, audioButton]) => {
         wordElement.textContent = verb[form];
         ipaElement.textContent = getIPAByForm(verb, form);
         audioButton.onclick = () => speak(verb[form]);
     });
     elements.verbModal.classList.remove("hidden");
+    elements.verbModal.setAttribute("aria-hidden", "false");
+    elements.closeVerbModal.focus();
 }
 
 function closeVerbModal() {
+    if (elements.verbModal.classList.contains("hidden")) {
+        return;
+    }
     elements.verbModal.classList.add("hidden");
+    elements.verbModal.setAttribute("aria-hidden", "true");
+    if (lastFocusedElement?.isConnected) {
+        lastFocusedElement.focus();
+    } else {
+        elements.showVerbList.focus();
+    }
+    lastFocusedElement = null;
+}
+
+function trapModalFocus(event) {
+    if (event.key !== "Tab" || elements.verbModal.classList.contains("hidden")) {
+        return;
+    }
+    const focusable = [...elements.verbModal.querySelectorAll("button:not(:disabled), [tabindex]:not([tabindex='-1'])")];
+    const first = focusable[0];
+    const last = focusable.at(-1);
+
+    if (!elements.verbModal.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
 }
 
 function speak(text) {
@@ -465,7 +566,7 @@ function speak(text) {
         return;
     }
     window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(text);
+    const speech = new SpeechSynthesisUtterance(text.split("/")[0].trim());
     speech.lang = "en-US";
     speech.rate = 0.8;
     speech.pitch = 1;
@@ -475,6 +576,7 @@ function speak(text) {
 function selectPracticeMode(button) {
     document.querySelectorAll(".mode-btn").forEach(item => {
         item.classList.toggle("active", item === button);
+        item.setAttribute("aria-pressed", String(item === button));
     });
     practiceMode = button.dataset.mode;
     newQuestion();
@@ -483,6 +585,7 @@ function selectPracticeMode(button) {
 function selectGroup(button) {
     document.querySelectorAll(".group-btn").forEach(item => {
         item.classList.toggle("active", item === button);
+        item.setAttribute("aria-pressed", String(item === button));
     });
     selectedGroup = button.dataset.group;
     newQuestion();
@@ -505,6 +608,7 @@ function selectForm(button) {
     if (isCorrect) {
         addCorrectAnswer();
     }
+    elements.nextButton.focus();
 }
 
 function bindEvents() {
@@ -527,14 +631,19 @@ function bindEvents() {
     formOptionButtons.forEach(button => {
         button.addEventListener("click", () => selectForm(button));
     });
-    document.getElementById("showVerbList").addEventListener("click", () => {
+    elements.showVerbList.addEventListener("click", () => {
         renderVerbTable();
         elements.verbListSection.classList.remove("hidden");
+        elements.showVerbList.setAttribute("aria-expanded", "true");
+        elements.closeVerbList.focus();
     });
-    document.getElementById("closeVerbList").addEventListener("click", () => {
+    elements.closeVerbList.addEventListener("click", () => {
+        closeVerbModal();
         elements.verbListSection.classList.add("hidden");
+        elements.showVerbList.setAttribute("aria-expanded", "false");
+        elements.showVerbList.focus();
     });
-    document.getElementById("closeVerbModal").addEventListener("click", closeVerbModal);
+    elements.closeVerbModal.addEventListener("click", closeVerbModal);
     elements.verbModal.addEventListener("click", event => {
         if (event.target === elements.verbModal) {
             closeVerbModal();
@@ -542,8 +651,15 @@ function bindEvents() {
     });
     document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
-            closeVerbModal();
+            if (!elements.verbModal.classList.contains("hidden")) {
+                closeVerbModal();
+            } else if (!elements.verbListSection.classList.contains("hidden")) {
+                elements.verbListSection.classList.add("hidden");
+                elements.showVerbList.setAttribute("aria-expanded", "false");
+                elements.showVerbList.focus();
+            }
         }
+        trapModalFocus(event);
     });
     elements.languageToggle.addEventListener("click", () => {
         currentLanguage = currentLanguage === "es" ? "en" : "es";

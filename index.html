@@ -40,15 +40,15 @@
 
         <div class="mode-buttons">
 
-            <button id="completeMode" class="mode-btn active" data-mode="complete" data-i18n="practice.complete">
+            <button id="completeMode" class="mode-btn active" data-mode="complete" data-i18n="practice.complete" aria-pressed="true">
                 Completar
             </button>
 
-            <button id="identifyMode" class="mode-btn" data-mode="identify" data-i18n="practice.identify">
+            <button id="identifyMode" class="mode-btn" data-mode="identify" data-i18n="practice.identify" aria-pressed="false">
                 Identificar forma
             </button>
 
-            <button id="selectMode" class="mode-btn" data-mode="select" data-i18n="practice.select">
+            <button id="selectMode" class="mode-btn" data-mode="select" data-i18n="practice.select" aria-pressed="false">
                 Seleccionar forma
             </button>
 
@@ -63,19 +63,19 @@
     <p class="subtitle" data-i18n="groups.title">Grupo de verbos</p>
     <section class="groups">
 
-        <button class="group-btn" data-group="review" data-i18n="groups.review">
+        <button class="group-btn" data-group="review" data-i18n="groups.review" aria-pressed="false">
             15 primeros verbos
         </button>
 
-        <button class="group-btn active" data-group="current" data-i18n="groups.current">
+        <button class="group-btn active" data-group="current" data-i18n="groups.current" aria-pressed="true">
             20 siguientes
         </button>
 
-        <button class="group-btn" data-group="future" data-i18n="groups.future">
-            Últimos 38
+        <button class="group-btn" data-group="future" data-i18n="groups.future" aria-pressed="false">
+            Últimos 37
         </button>
 
-        <button class="group-btn" data-group="all" data-i18n="groups.all">
+        <button class="group-btn" data-group="all" data-i18n="groups.all" aria-pressed="false">
             Todos
         </button>
 
@@ -109,7 +109,7 @@
                 drink
             </h2>
 
-            <button id="speakQuestion" class="speak-button" aria-label="Escuchar pronunciación">
+            <button id="speakQuestion" class="speak-button" data-i18n-aria-label="buttons.listenPronunciation" aria-label="Escuchar pronunciación">
                 🔊
             </button>
 
@@ -146,7 +146,7 @@
         </button>
 
 
-        <div id="result" class="result"></div>
+        <div id="result" class="result" role="status" aria-live="polite"></div>
 
 
         <button id="nextButton" data-i18n="buttons.next" class="secondary-button">
@@ -155,12 +155,12 @@
 
     </section>
 
-    <button id="showVerbList" data-i18n="buttons.list" class="list-button">
+    <button id="showVerbList" data-i18n="buttons.list" class="list-button" aria-expanded="false" aria-controls="verbListSection">
         📚 Ver lista completa
     </button>
 
 
-    <section id="verbListSection" class="verb-list-section hidden">
+    <section id="verbListSection" class="verb-list-section hidden" aria-labelledby="verbListTitle">
 
         <div class="list-header">
 
@@ -169,7 +169,7 @@
                     IRREGULAR VERBS
                 </p>
 
-                <h3 data-i18n="list.title">
+                <h3 id="verbListTitle" data-i18n="list.title">
                     Lista completa
                 </h3>
             </div>
@@ -184,7 +184,7 @@
 
         <div class="table-container">
 
-            <table>
+            <table aria-labelledby="verbListTitle">
 
                 <thead>
 
@@ -211,7 +211,7 @@
      MODAL DETALLE DEL VERBO
 ========================= -->
 
-        <div id="verbModal" class="verb-modal hidden">
+        <div id="verbModal" class="verb-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalVerbTitle">
 
             <div class="verb-modal-content">
 
