@@ -377,6 +377,84 @@ input:focus {
     color: #ff8b8b;
 }
 
+.result.correct:not(:empty) {
+    padding: 14px;
+    border: 1px solid rgba(110, 231, 168, 0.45);
+    background: rgba(22, 78, 58, 0.32);
+}
+
+.result.incorrect:not(:empty) {
+    padding: 14px;
+    border: 1px solid rgba(255, 139, 139, 0.42);
+    background: rgba(74, 31, 36, 0.34);
+}
+
+.result.feedback-correct-effect {
+    animation: feedback-pop 0.55s ease-out;
+}
+
+.result.feedback-incorrect-effect {
+    animation: feedback-shake 0.42s ease-out;
+}
+
+.card.feedback-correct-effect {
+    animation: card-success-pulse 0.65s ease-out;
+}
+
+.card.feedback-incorrect-effect {
+    animation: card-error-pulse 0.55s ease-out;
+}
+
+@keyframes feedback-pop {
+    0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+    }
+    65% {
+        transform: translateY(-2px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes feedback-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+}
+
+@keyframes card-success-pulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px #0d1117;
+    }
+    45% {
+        border-color: #6ee7a8;
+        box-shadow: 0 0 0 4px rgba(110, 231, 168, 0.16), 0 14px 36px rgba(22, 163, 74, 0.24);
+    }
+}
+
+@keyframes card-error-pulse {
+    0%, 100% {
+        box-shadow: 0 10px 30px #0d1117;
+    }
+    45% {
+        border-color: #ff8b8b;
+        box-shadow: 0 0 0 4px rgba(255, 139, 139, 0.14), 0 14px 36px rgba(220, 38, 38, 0.2);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .result.feedback-correct-effect,
+    .result.feedback-incorrect-effect,
+    .card.feedback-correct-effect,
+    .card.feedback-incorrect-effect {
+        animation: none;
+    }
+}
+
 
 /* respuesta correcta */
 
@@ -388,6 +466,28 @@ input:focus {
     font-weight: bold;
 
     color: white;
+}
+
+.feedback-label {
+    display: block;
+    margin-top: 10px;
+    color: var(--secondary-text);
+    font-size: 12px;
+}
+
+.submitted-answer {
+    margin-top: 2px;
+    font-weight: 700;
+}
+
+.feedback-correct-form {
+    display: block;
+    margin-top: 3px;
+    font-size: 17px;
+}
+
+.incorrect .feedback-correct-form {
+    color: #6ee7a8;
 }
 
 
@@ -1306,6 +1406,20 @@ body.light .correct {
 
 body.light .incorrect {
     color: #b91c1c;
+}
+
+body.light .result.correct:not(:empty) {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+body.light .result.incorrect:not(:empty) {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+body.light .incorrect .feedback-correct-form {
+    color: #15803d;
 }
 
 body.light .verb-modal {

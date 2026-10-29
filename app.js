@@ -44,6 +44,8 @@ const TRANSLATIONS = {
         results: {
             correct: "Correcto",
             incorrect: "Incorrecto",
+            yourAnswer: "Tu respuesta:",
+            correctAnswer: "Respuesta correcta:",
             validForm: "Forma válida:",
             validForms: "Formas válidas:",
             wordCanBe: "Esta palabra también puede ser:",
@@ -107,6 +109,8 @@ const TRANSLATIONS = {
         results: {
             correct: "Correct",
             incorrect: "Incorrect",
+            yourAnswer: "Your answer:",
+            correctAnswer: "Correct answer:",
             validForm: "Valid form:",
             validForms: "Valid forms:",
             wordCanBe: "This word can also be:",
@@ -142,6 +146,7 @@ let translations = TRANSLATIONS[currentLanguage];
 let lastFocusedElement = null;
 
 const elements = {
+    card: document.querySelector(".card"),
     themeToggle: document.getElementById("themeToggle"),
     languageToggle: document.getElementById("languageToggle"),
     verbWord: document.getElementById("verbWord"),
@@ -314,9 +319,24 @@ function resetQuestionUI() {
     elements.answer.disabled = false;
     elements.checkButton.disabled = false;
     questionAnswered = false;
+    elements.card.classList.remove("feedback-correct-effect", "feedback-incorrect-effect");
+    elements.result.classList.remove("feedback-correct-effect", "feedback-incorrect-effect");
     formOptionButtons.forEach(button => {
         button.disabled = false;
         button.classList.remove("correct-option", "wrong-option");
+    });
+}
+
+function triggerAnswerEffect(isCorrect) {
+    const effectClass = isCorrect
+        ? "feedback-correct-effect"
+        : "feedback-incorrect-effect";
+    const effectClasses = ["feedback-correct-effect", "feedback-incorrect-effect"];
+
+    [elements.card, elements.result].forEach(element => {
+        element.classList.remove(...effectClasses);
+        void element.offsetWidth;
+        element.classList.add(effectClass);
     });
 }
 
@@ -329,13 +349,26 @@ function createElement(tagName, className = "", text = "") {
     return element;
 }
 
-function showAnswerFeedback(isCorrect, word, ipa, form) {
+function showAnswerFeedback(isCorrect, userAnswer, word, ipa, form) {
     elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
     const status = createElement(
         "div",
         "",
         `${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}`
     );
+    const feedbackElements = [status];
+
+    if (!isCorrect) {
+        feedbackElements.push(
+            createElement("small", "feedback-label", t("results.yourAnswer")),
+            createElement("div", "submitted-answer", userAnswer)
+        );
+    }
+
+    feedbackElements.push(
+        createElement("small", "feedback-label", t("results.correctAnswer"))
+    );
+
     const answerWord = createElement("div", "correct-answer", word);
     const answerPhonetic = createElement("div", "answer-phonetic", ipa);
     const audioButton = createElement(
@@ -345,37 +378,41 @@ function showAnswerFeedback(isCorrect, word, ipa, form) {
     );
     audioButton.type = "button";
     audioButton.addEventListener("click", () => speak(word, form));
-    elements.result.replaceChildren(status, answerWord, answerPhonetic, audioButton);
+    elements.result.replaceChildren(
+        ...feedbackElements,
+        answerWord,
+        answerPhonetic,
+        audioButton
+    );
+    triggerAnswerEffect(isCorrect);
 }
 
 function showFormFeedback(isCorrect, validForms, selectedForm = null) {
     const validNames = validForms.map(getFormName).join(" · ");
     const hasSeveralForms = validForms.length > 1;
-    let explanation = "";
-    if (isCorrect && hasSeveralForms) {
-        explanation = t("results.wordCanBe");
-    } else if (!isCorrect) {
-        explanation = t(hasSeveralForms ? "results.validForms" : "results.validForm");
-    }
     elements.result.className = `result ${isCorrect ? "correct" : "incorrect"}`;
     elements.result.replaceChildren(
         document.createTextNode(
             `${isCorrect ? "✅" : "❌"} ${t(isCorrect ? "results.correct" : "results.incorrect")}`
         )
     );
-    if (explanation) {
+
+    if (!isCorrect && selectedForm) {
         elements.result.append(
-            document.createElement("br"),
-            createElement("small", "", explanation),
-            document.createElement("br"),
-            createElement("strong", "", validNames)
-        );
-    } else if (isCorrect && selectedForm) {
-        elements.result.append(
-            document.createElement("br"),
-            createElement("strong", "", getFormName(selectedForm))
+            createElement("small", "feedback-label", t("results.yourAnswer")),
+            createElement("div", "submitted-answer", getFormName(selectedForm))
         );
     }
+
+    const answerLabel = hasSeveralForms
+        ? t("results.validForms")
+        : t("results.correctAnswer");
+
+    elements.result.append(
+        createElement("small", "feedback-label", answerLabel),
+        createElement("strong", "feedback-correct-form", validNames)
+    );
+    triggerAnswerEffect(isCorrect);
 }
 
 function showIdentifyHint() {
@@ -385,6 +422,7 @@ function showIdentifyHint() {
         document.createElement("br"),
         createElement("strong", "", "infinitive, simple, participle")
     );
+    triggerAnswerEffect(false);
 }
 
 function checkAnswer() {
@@ -402,6 +440,7 @@ function checkAnswer() {
         setQuestionLocked(true);
         showAnswerFeedback(
             isCorrect,
+            userAnswer,
             correctAnswer,
             getIPAByForm(currentVerb, requestedForm),
             requestedForm
