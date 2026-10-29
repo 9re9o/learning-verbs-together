@@ -50,11 +50,11 @@ const TRANSLATIONS = {
             validForms: "Formas válidas:",
             wordCanBe: "Esta palabra también puede ser:",
             writeHint: "Escribe:",
-            noVerbs: "No hay verbos disponibles en este grupo."
+            noVerbs: "No hay verbos disponibles en este grupo.",
+            roundComplete: "🎉 ¡Completaste todos los verbos! Comienza una nueva ronda."
         },
         counter: {
-            one: "{count} correcta",
-            many: "{count} correctas"
+            progress: "{done}/{total} acertados"
         },
         list: {
             eyebrow: "IRREGULAR VERBS",
@@ -115,11 +115,11 @@ const TRANSLATIONS = {
             validForms: "Valid forms:",
             wordCanBe: "This word can also be:",
             writeHint: "Type:",
-            noVerbs: "There are no verbs available in this group."
+            noVerbs: "There are no verbs available in this group.",
+            roundComplete: "🎉 You completed every verb! A new round has started."
         },
         counter: {
-            one: "{count} correct",
-            many: "{count} correct"
+            progress: "{done}/{total} mastered"
         },
         list: {
             eyebrow: "IRREGULAR VERBS",
@@ -139,11 +139,11 @@ let practiceMode = "complete";
 let currentVerb;
 let previousVerb;
 let requestedForm;
-let correctAnswers = 0;
 let questionAnswered = false;
 let currentLanguage = localStorage.getItem("language") === "en" ? "en" : "es";
 let translations = TRANSLATIONS[currentLanguage];
 let lastFocusedElement = null;
+const completedVerbsByRound = new Map();
 
 const elements = {
     card: document.querySelector(".card"),
@@ -239,19 +239,37 @@ function formatTranslation(path, replacements = {}) {
 }
 
 function updateCounter() {
-    const key = correctAnswers === 1 ? "counter.one" : "counter.many";
-    elements.counter.textContent = formatTranslation(key, { count: correctAnswers });
+    const total = getBaseList().length;
+    const done = Math.min(getCompletedVerbs().size, total);
+    elements.counter.textContent = formatTranslation("counter.progress", { done, total });
 }
 
-function addCorrectAnswer() {
-    correctAnswers += 1;
+function getRoundKey() {
+    return `${selectedGroup}:${practiceMode}`;
+}
+
+function getCompletedVerbs() {
+    const key = getRoundKey();
+    if (!completedVerbsByRound.has(key)) {
+        completedVerbsByRound.set(key, new Set());
+    }
+    return completedVerbsByRound.get(key);
+}
+
+function markCurrentVerbCorrect() {
+    getCompletedVerbs().add(currentVerb.infinitive);
     updateCounter();
 }
 
-function getCurrentList() {
+function getBaseList() {
     return selectedGroup === "all"
         ? verbs
         : verbs.filter(verb => verb.group === selectedGroup);
+}
+
+function getCurrentList() {
+    const completed = getCompletedVerbs();
+    return getBaseList().filter(verb => !completed.has(verb.infinitive));
 }
 
 function randomItem(items) {
@@ -446,7 +464,7 @@ function checkAnswer() {
             requestedForm
         );
         if (isCorrect) {
-            addCorrectAnswer();
+            markCurrentVerbCorrect();
         }
         elements.nextButton.focus();
         return;
@@ -462,7 +480,7 @@ function checkAnswer() {
         setQuestionLocked(true);
         showFormFeedback(isCorrect, validForms, selectedForm);
         if (isCorrect) {
-            addCorrectAnswer();
+            markCurrentVerbCorrect();
         }
         elements.nextButton.focus();
     }
@@ -482,12 +500,26 @@ function configureFormQuestion() {
 
 function newQuestion() {
     resetQuestionUI();
-    const list = getCurrentList();
-    if (!list.length) {
+    const baseList = getBaseList();
+    if (!baseList.length) {
         elements.result.className = "result incorrect";
         elements.result.textContent = t("results.noVerbs");
+        updateCounter();
         return;
     }
+
+    let list = getCurrentList();
+    const roundCompleted = list.length === 0;
+
+    if (roundCompleted) {
+        getCompletedVerbs().clear();
+        list = getCurrentList();
+        elements.result.className = "result correct round-complete";
+        elements.result.textContent = t("results.roundComplete");
+        triggerAnswerEffect(true);
+    }
+
+    updateCounter();
     currentVerb = randomVerb(list);
     previousVerb = currentVerb;
     if (practiceMode === "complete") {
@@ -658,7 +690,7 @@ function selectForm(button) {
     }
     showFormFeedback(isCorrect, validForms, button.dataset.form);
     if (isCorrect) {
-        addCorrectAnswer();
+        markCurrentVerbCorrect();
     }
     elements.nextButton.focus();
 }

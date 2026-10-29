@@ -389,6 +389,10 @@ input:focus {
     background: rgba(74, 31, 36, 0.34);
 }
 
+.round-complete {
+    font-weight: 700;
+}
+
 .result.feedback-correct-effect {
     animation: feedback-pop 0.55s ease-out;
 }

@@ -99,12 +99,12 @@ const verbs = [
     {
         "group": "review",
         "infinitive": "burn",
-        "past": "burned",
-        "participle": "burned",
+        "past": "burnt",
+        "participle": "burnt",
         "translation": "quemar",
         "ipaInfinitive": "/bɝn/",
-        "ipaPast": "/bɝnd/",
-        "ipaParticiple": "/bɝnd/"
+        "ipaPast": "/bɝnt/",
+        "ipaParticiple": "/bɝnt/"
     },
 
 
